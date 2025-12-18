@@ -49,55 +49,60 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+    <div className="min-h-screen bg-gradient-to-br from-violet-500 via-purple-500 to-pink-500 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+      </div>
       
       <div className="relative w-full max-w-6xl">
-        {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl mb-4 shadow-2xl">
-            <GraduationCap className="w-10 h-10 text-white" />
+        {/* Logo and Header with Glass Effect */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-xl rounded-3xl mb-6 shadow-2xl border border-white/30 transform hover:rotate-12 transition-transform duration-300">
+            <GraduationCap className="w-12 h-12 text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-5xl font-black text-white mb-3 drop-shadow-2xl">
             Student Success Platform
           </h1>
-          <p className="text-lg text-gray-600">
-            Choose your role to get started
+          <p className="text-xl text-white/90 font-medium">
+            Choose your role to get started ✨
           </p>
         </div>
 
         {!selectedRole ? (
-          /* Role Selection */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {roles.map((role) => {
+          /* Role Selection with Enhanced Cards */
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {roles.map((role, index) => {
               const Icon = role.icon;
               return (
                 <button
                   key={role.id}
                   onClick={() => setSelectedRole(role.id)}
-                  className="group bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-gray-200"
+                  className="group bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-4 hover:scale-105 border-2 border-white/50"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className={`w-16 h-16 bg-gradient-to-br ${role.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                    <Icon className="w-8 h-8 text-white" />
+                  <div className={`w-20 h-20 bg-gradient-to-br ${role.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-2xl`}>
+                    <Icon className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-2xl font-black text-gray-900 mb-3">
                     {role.title}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 mb-6 font-medium">
                     {role.description}
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {role.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                        <div className={`w-1.5 h-1.5 bg-gradient-to-r ${role.gradient} rounded-full`}></div>
+                      <div key={idx} className="flex items-center gap-3 text-sm text-gray-700 font-semibold">
+                        <div className={`w-2 h-2 bg-gradient-to-r ${role.gradient} rounded-full shadow-md`}></div>
                         {feature}
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6 flex items-center justify-center gap-2 text-blue-600 font-semibold group-hover:gap-3 transition-all">
+                  <div className="mt-8 flex items-center justify-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 font-black text-lg group-hover:gap-4 transition-all">
                     Select
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-6 h-6 text-blue-600 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </button>
               );

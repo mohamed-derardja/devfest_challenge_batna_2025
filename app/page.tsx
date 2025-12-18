@@ -81,20 +81,20 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Header */}
-      <header className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      {/* Header with Glassmorphism */}
+      <header className="bg-white/80 backdrop-blur-xl shadow-2xl border-b border-gray-200/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/50 transform hover:rotate-12 transition-transform duration-300">
+                <BookOpen className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Student Success Platform
                 </h1>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs font-semibold text-gray-600">
                   {userRole === 'student' ? '🎓 Student Portal' : 
                    userRole === 'teacher' ? '👨‍🏫 Teacher Portal' : 
                    '🏢 Staff Portal'}
@@ -102,23 +102,23 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="hidden md:block text-right mr-3">
-                <p className="text-sm font-medium text-gray-900">{userEmail}</p>
-                <p className="text-xs text-gray-500 capitalize">{userRole}</p>
+              <div className="hidden md:block text-right mr-3 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+                <p className="text-sm font-bold text-gray-900">{userEmail}</p>
+                <p className="text-xs text-blue-600 capitalize font-semibold">{userRole}</p>
               </div>
               <Link
                 href="/profile"
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transform duration-200"
               >
                 <User className="w-4 h-4" />
-                <span className="hidden md:inline">Profile</span>
+                <span className="hidden md:inline font-semibold">Profile</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-xl hover:from-red-700 hover:to-pink-700 transition-all shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 hover:scale-105 transform duration-200"
               >
                 <LogOut className="w-4 h-4" />
-                <span className="hidden md:inline">Logout</span>
+                <span className="hidden md:inline font-semibold">Logout</span>
               </button>
             </div>
           </div>
