@@ -23,7 +23,7 @@ const startStandalone = async () => {
         console.log('------------------------------------------------');
 
         // 2. Set Environment Variables
-        process.env.MONGODB_URI = uri;
+        process.env.MONGO_URI = uri;
         process.env.PORT = process.env.PORT || 5000;
         process.env.NODE_ENV = 'development';
 

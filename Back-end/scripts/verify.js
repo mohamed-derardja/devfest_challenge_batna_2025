@@ -12,7 +12,7 @@ const runVerification = async () => {
     console.log('InMemory MongoDB running at:', uri);
 
     // 2. Set Env Vars BEFORE requiring server
-    process.env.MONGODB_URI = uri;
+    process.env.MONGO_URI = uri;
     process.env.PORT = '5001'; // Use different port
     process.env.NODE_ENV = 'test';
 
