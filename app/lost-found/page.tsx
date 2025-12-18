@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
-import CampusHeatmap from '../components/CampusHeatmap';
 import { 
   Package, 
   Search, 
@@ -118,43 +117,121 @@ export default function LostFoundPage() {
 
         {/* Dashboard Tab */}
         {activeTab === 'dashboard' && (
-          <div className="space-y-6">
-            {/* Quick Stats */}
+          <div className="space-y-8">
+            {/* Hero Dashboard Banner */}
+            <div className="relative overflow-hidden bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 rounded-3xl p-8 shadow-2xl">
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-64 h-64 bg-white/10 rounded-full blur-3xl -top-10 -left-10 animate-blob"></div>
+                <div className="absolute w-64 h-64 bg-white/10 rounded-full blur-3xl -bottom-10 -right-10 animate-blob animation-delay-2000"></div>
+              </div>
+              <div className="relative z-10">
+                <h2 className="text-3xl font-bold text-white mb-2">Lost & Found Dashboard</h2>
+                <p className="text-white/90 text-lg">AI-powered item matching system for University Batna 2</p>
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-3xl font-black text-white">34</div>
+                    <div className="text-xs text-white/80 font-medium">Active Lost Reports</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-3xl font-black text-white">28</div>
+                    <div className="text-xs text-white/80 font-medium">Items Waiting Owner</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-3xl font-black text-white">12</div>
+                    <div className="text-xs text-white/80 font-medium">AI Matches Found</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-3xl font-black text-white">156</div>
+                    <div className="text-xs text-white/80 font-medium">Returned This Year</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Stats - Enhanced */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-gray-700">Lost Items</h3>
-                  <AlertCircle className="w-5 h-5 text-red-600" />
+              <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-red-200">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-500 to-pink-500 opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
+                      <AlertCircle className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full">Active</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-1">Lost Items</h3>
+                  <p className="text-4xl font-black text-gray-900 mb-2">34</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                      <div className="bg-gradient-to-r from-red-500 to-pink-500 h-1.5 rounded-full" style={{width: '68%'}}></div>
+                    </div>
+                    <span className="font-semibold">68%</span>
+                  </div>
+                  <p className="text-xs text-green-600 mt-2 font-semibold">↓ 12% from last week</p>
                 </div>
-                <p className="text-3xl font-bold text-gray-900">34</p>
-                <p className="text-sm text-gray-600 mt-1">Active reports</p>
               </div>
               
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-gray-700">Found Items</h3>
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+              <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-green-200">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500 to-emerald-500 opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30">
+                      <CheckCircle className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">Waiting</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-1">Found Items</h3>
+                  <p className="text-4xl font-black text-gray-900 mb-2">28</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full" style={{width: '56%'}}></div>
+                    </div>
+                    <span className="font-semibold">56%</span>
+                  </div>
+                  <p className="text-xs text-green-600 mt-2 font-semibold">↑ 8% from last week</p>
                 </div>
-                <p className="text-3xl font-bold text-gray-900">28</p>
-                <p className="text-sm text-gray-600 mt-1">Waiting for owner</p>
               </div>
               
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-gray-700">AI Matches</h3>
-                  <TrendingUp className="w-5 h-5 text-blue-600" />
+              <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <TrendingUp className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">AI</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-1">AI Matches</h3>
+                  <p className="text-4xl font-black text-gray-900 mb-2">12</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                      <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full" style={{width: '85%'}}></div>
+                    </div>
+                    <span className="font-semibold">85%</span>
+                  </div>
+                  <p className="text-xs text-blue-600 mt-2 font-semibold">Very High Accuracy</p>
                 </div>
-                <p className="text-3xl font-bold text-gray-900">12</p>
-                <p className="text-sm text-gray-600 mt-1">Potential matches</p>
               </div>
               
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-gray-700">Returned</h3>
-                  <Package className="w-5 h-5 text-orange-600" />
+              <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-200">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500 to-yellow-500 opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
+                <div className="relative p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+                      <Package className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Success</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 mb-1">Returned</h3>
+                  <p className="text-4xl font-black text-gray-900 mb-2">156</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                      <div className="bg-gradient-to-r from-orange-500 to-yellow-500 h-1.5 rounded-full" style={{width: '92%'}}></div>
+                    </div>
+                    <span className="font-semibold">92%</span>
+                  </div>
+                  <p className="text-xs text-orange-600 mt-2 font-semibold">This semester</p>
                 </div>
-                <p className="text-3xl font-bold text-gray-900">156</p>
-                <p className="text-sm text-gray-600 mt-1">This semester</p>
               </div>
             </div>
 
@@ -162,30 +239,64 @@ export default function LostFoundPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <button
                 onClick={() => { setPostType('lost'); setActiveTab('post'); }}
-                className="bg-white border-2 border-red-200 rounded-lg p-8 hover:border-red-400 hover:bg-red-50 transition-all text-left"
+                className="group relative bg-white rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 text-left overflow-hidden border-2 border-red-200 hover:border-red-400"
               >
-                <AlertCircle className="w-12 h-12 text-red-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">I Lost Something</h3>
-                <p className="text-gray-600">Report a lost item and let AI find matches</p>
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-red-500 to-pink-500 opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity"></div>
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-red-500/30">
+                    <AlertCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">I Lost Something</h3>
+                  <p className="text-gray-600 mb-4">Report a lost item and let AI find matches instantly with our smart matching system</p>
+                  <div className="flex items-center text-red-600 font-semibold group-hover:gap-2 transition-all">
+                    Get Started
+                    <svg className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                </div>
               </button>
               
               <button
                 onClick={() => { setPostType('found'); setActiveTab('post'); }}
-                className="bg-white border-2 border-green-200 rounded-lg p-8 hover:border-green-400 hover:bg-green-50 transition-all text-left"
+                className="group relative bg-white rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 text-left overflow-hidden border-2 border-green-200 hover:border-green-400"
               >
-                <CheckCircle className="w-12 h-12 text-green-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">I Found Something</h3>
-                <p className="text-gray-600">Post a found item to help someone recover it</p>
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-green-500 to-emerald-500 opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity"></div>
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-green-500/30">
+                    <CheckCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">I Found Something</h3>
+                  <p className="text-gray-600 mb-4">Post a found item to help someone recover it and make their day better</p>
+                  <div className="flex items-center text-green-600 font-semibold group-hover:gap-2 transition-all">
+                    Help Someone
+                    <svg className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                </div>
               </button>
             </div>
 
             {/* AI Matches */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
-                AI Suggested Matches
-              </h2>
-              <div className="space-y-4">
+            <div className="bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-xl border border-blue-100 overflow-hidden">
+              <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">AI Suggested Matches</h2>
+                      <p className="text-sm text-white/80">Smart matching with 95% accuracy</p>
+                    </div>
+                  </div>
+                  <span className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-bold text-white border border-white/30">
+                    12 Matches
+                  </span>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
                 {[
                   {
                     lost: { item: 'Black Laptop', reporter: 'Ahmed K.', location: 'Library 3rd Floor', date: 'Dec 15, 2025' },
@@ -200,37 +311,70 @@ export default function LostFoundPage() {
                     confidence: 'High'
                   },
                 ].map((match, idx) => (
-                  <div key={idx} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className={`text-xs px-3 py-1 rounded font-semibold ${
-                        match.match >= 90 ? 'bg-green-100 text-green-700' :
-                        match.match >= 80 ? 'bg-blue-100 text-blue-700' :
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {match.match}% Match - {match.confidence} Confidence
-                      </span>
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                  <div key={idx} className="group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-300 p-5 hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className={`w-16 h-16 rounded-full flex items-center justify-center font-black text-2xl ${match.match >= 90 ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white' : 'bg-gradient-to-br from-blue-500 to-purple-500 text-white'}`}>
+                            {match.match}%
+                          </div>
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-gray-200">
+                            <TrendingUp className="w-3 h-3 text-green-600" />
+                          </div>
+                        </div>
+                        <div>
+                          <span className={`inline-block px-4 py-1.5 rounded-full text-sm font-bold ${match.match >= 90 ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {match.confidence} Confidence
+                          </span>
+                          <p className="text-xs text-gray-500 mt-1">AI Powered Match</p>
+                        </div>
+                      </div>
+                      <button className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/30 font-semibold text-sm group-hover:scale-105">
                         Connect Users
                       </button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-red-50 rounded-lg p-3">
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertCircle className="w-4 h-4 text-red-600" />
-                          <span className="text-sm font-semibold text-red-900">Lost</span>
+                      <div className="relative bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-4 border-2 border-red-200">
+                        <div className="absolute top-3 right-3">
+                          <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">Lost</span>
                         </div>
-                        <p className="font-semibold text-gray-900">{match.lost.item}</p>
-                        <p className="text-sm text-gray-600">By {match.lost.reporter}</p>
-                        <p className="text-xs text-gray-500">{match.lost.location} • {match.lost.date}</p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                            <AlertCircle className="w-5 h-5 text-white" />
+                          </div>
+                          <span className="text-sm font-bold text-red-900">Reported Lost</span>
+                        </div>
+                        <p className="font-bold text-lg text-gray-900 mb-1">{match.lost.item}</p>
+                        <p className="text-sm text-gray-600 mb-2">By {match.lost.reporter}</p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <MapPin className="w-3 h-3" />
+                          <span>{match.lost.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{match.lost.date}</span>
+                        </div>
                       </div>
-                      <div className="bg-green-50 rounded-lg p-3">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-sm font-semibold text-green-900">Found</span>
+                      <div className="relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                        <div className="absolute top-3 right-3">
+                          <span className="px-2 py-1 bg-green-500 text-white text-xs font-bold rounded-full">Found</span>
                         </div>
-                        <p className="font-semibold text-gray-900">{match.found.item}</p>
-                        <p className="text-sm text-gray-600">By {match.found.reporter}</p>
-                        <p className="text-xs text-gray-500">{match.found.location} • {match.found.date}</p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                            <CheckCircle className="w-5 h-5 text-white" />
+                          </div>
+                          <span className="text-sm font-bold text-green-900">Reported Found</span>
+                        </div>
+                        <p className="font-bold text-lg text-gray-900 mb-1">{match.found.item}</p>
+                        <p className="text-sm text-gray-600 mb-2">By {match.found.reporter}</p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <MapPin className="w-3 h-3" />
+                          <span>{match.found.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{match.found.date}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -239,27 +383,48 @@ export default function LostFoundPage() {
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
-              <div className="space-y-3">
-                {[
-                  { action: 'Item Returned', item: 'Blue Water Bottle', time: '2 hours ago', type: 'success' },
-                  { action: 'New Found Item', item: 'Student ID Card', time: '4 hours ago', type: 'info' },
-                  { action: 'New Lost Report', item: 'Black Backpack', time: '6 hours ago', type: 'warning' },
-                ].map((activity, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
-                    <div className={`w-2 h-2 rounded-full ${
-                      activity.type === 'success' ? 'bg-green-500' :
-                      activity.type === 'info' ? 'bg-blue-500' :
-                      'bg-yellow-500'
-                    }`}></div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900">{activity.action}</p>
-                      <p className="text-sm text-gray-600">{activity.item}</p>
-                    </div>
-                    <span className="text-xs text-gray-500">{activity.time}</span>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                      <Clock className="w-6 h-6 text-purple-600" />
+                      Recent Activity
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">Latest updates and actions</p>
                   </div>
-                ))}
+                  <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-700">
+                    View All
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-3">
+                {[
+                  { action: 'Item Returned', item: 'Blue Water Bottle', time: '2 hours ago', type: 'success', icon: CheckCircle },
+                  { action: 'New Found Item', item: 'Student ID Card', time: '4 hours ago', type: 'info', icon: Package },
+                  { action: 'New Lost Report', item: 'Black Backpack', time: '6 hours ago', type: 'warning', icon: AlertCircle },
+                ].map((activity, idx) => {
+                  const Icon = activity.icon;
+                  return (
+                    <div key={idx} className="group flex items-center gap-4 p-4 border-2 border-gray-100 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all cursor-pointer">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        activity.type === 'success' ? 'bg-gradient-to-br from-green-500 to-emerald-500' :
+                        activity.type === 'info' ? 'bg-gradient-to-br from-blue-500 to-purple-500' :
+                        'bg-gradient-to-br from-yellow-500 to-orange-500'
+                      } shadow-lg`}>
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{activity.action}</h4>
+                        <p className="text-sm text-gray-600">{activity.item}</p>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full">
+                        <Clock className="w-3 h-3" />
+                        {activity.time}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -900,8 +1065,12 @@ export default function LostFoundPage() {
                 Interactive satellite map showing where items are most commonly lost at University Batna 2. Click on markers for details.
               </p>
 
-              {/* Interactive Satellite Map with Leaflet */}
-              <CampusHeatmap />
+              {/* Placeholder for Campus Heatmap */}
+              <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center mb-6">
+                <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">Interactive Campus Map</h3>
+                <p className="text-gray-500">Heatmap visualization coming soon</p>
+              </div>
 
               {/* Detailed Statistics by Building */}
               {/* Detailed Statistics by Building */}

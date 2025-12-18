@@ -13,7 +13,20 @@ import {
   TrendingUp,
   PlayCircle,
   CheckCircle,
-  Trophy
+  Trophy,
+  Settings,
+  BarChart3,
+  Zap,
+  Award,
+  AlertCircle,
+  Plus,
+  Minus,
+  Pause,
+  Play,
+  Users,
+  Lightbulb,
+  Timer,
+  X
 } from 'lucide-react';
 
 export default function ExamPrepPage() {
@@ -21,6 +34,41 @@ export default function ExamPrepPage() {
   const [quizInputMethod, setQuizInputMethod] = useState<'text' | 'upload'>('text');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [textContent, setTextContent] = useState('');
+  
+  // Study Planner States
+  const [showPersonalDataForm, setShowPersonalDataForm] = useState(false);
+  const [pomodoroTime, setPomodoroTime] = useState(25 * 60);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [studyStreak, setStudyStreak] = useState(7);
+  const [totalStudyHours, setTotalStudyHours] = useState(34.5);
+  
+  // Personal Study Preferences
+  const [personalData, setPersonalData] = useState({
+    studyGoal: 'Increase grades',
+    availableHoursPerDay: 4,
+    preferredStudyTime: 'morning',
+    learningStyle: 'visual',
+    difficultyLevel: 'intermediate',
+    breakDuration: 5,
+    sessionsPerDay: 4,
+    focusSubjects: ['Mathematics', 'Physics'],
+    weakAreas: ['Chemistry'],
+    examDates: [
+      { subject: 'Mathematics', date: '2025-12-25' },
+      { subject: 'Physics', date: '2025-12-28' }
+    ]
+  });
+  
+  // Performance Tracking
+  const [performanceData, setPerformanceData] = useState([
+    { date: '2025-12-11', hoursStudied: 3.5, focusScore: 85, topicsCompleted: 4 },
+    { date: '2025-12-12', hoursStudied: 4.0, focusScore: 90, topicsCompleted: 5 },
+    { date: '2025-12-13', hoursStudied: 3.0, focusScore: 75, topicsCompleted: 3 },
+    { date: '2025-12-14', hoursStudied: 5.0, focusScore: 92, topicsCompleted: 6 },
+    { date: '2025-12-15', hoursStudied: 4.5, focusScore: 88, topicsCompleted: 5 },
+    { date: '2025-12-16', hoursStudied: 4.0, focusScore: 85, topicsCompleted: 4 },
+    { date: '2025-12-17', hoursStudied: 3.5, focusScore: 80, topicsCompleted: 4 },
+  ]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -649,16 +697,55 @@ Example:
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { title: 'MIT OpenCourseWare - Linear Algebra', duration: '34 videos', platform: 'YouTube' },
-                      { title: '3Blue1Brown - Essence of Calculus', duration: '12 videos', platform: 'YouTube' },
+                      { 
+                        title: 'MIT OpenCourseWare - Linear Algebra', 
+                        duration: '34 videos', 
+                        platform: 'YouTube',
+                        thumbnail: 'https://img.youtube.com/vi/J7DzL2_Na80/maxresdefault.jpg',
+                        channel: 'MIT OpenCourseWare',
+                        views: '2.1M views'
+                      },
+                      { 
+                        title: '3Blue1Brown - Essence of Calculus', 
+                        duration: '12 videos', 
+                        platform: 'YouTube',
+                        thumbnail: 'https://img.youtube.com/vi/WUvTyaaNkzM/maxresdefault.jpg',
+                        channel: '3Blue1Brown',
+                        views: '8.5M views'
+                      },
                     ].map((video, idx) => (
-                      <div key={idx} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
-                        <h4 className="font-semibold text-gray-900">{video.title}</h4>
-                        <div className="flex items-center justify-between mt-3">
-                          <span className="text-sm text-gray-600">{video.duration}</span>
-                          <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-700">
-                            {video.platform}
+                      <div key={idx} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                        {/* Thumbnail */}
+                        <div className="relative h-40 bg-gray-900 overflow-hidden">
+                          <img 
+                            src={video.thumbnail} 
+                            alt={video.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="225"><rect fill="%23ddd" width="400" height="225"/><text fill="%23999" x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Arial" font-size="18">Video Thumbnail</text></svg>';
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center">
+                            <PlayCircle className="w-16 h-16 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                          <span className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-2 py-1 rounded">
+                            {video.duration}
                           </span>
+                        </div>
+                        
+                        {/* Content */}
+                        <div className="p-4">
+                          <h4 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                            {video.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 mb-2">{video.channel}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">{video.views}</span>
+                            <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-700 font-semibold">
+                              {video.platform}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -697,54 +784,347 @@ Example:
         {/* Study Planner Tab */}
         {activeTab === 'planner' && (
           <div className="space-y-6">
+            {/* Personal Data Settings Card */}
+            {showPersonalDataForm && (
+              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-blue-600" />
+                    Personal Study Settings
+                  </h2>
+                  <button
+                    onClick={() => setShowPersonalDataForm(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Study Goal</label>
+                    <select 
+                      value={personalData.studyGoal}
+                      onChange={(e) => setPersonalData({...personalData, studyGoal: e.target.value})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="Increase grades">Increase grades</option>
+                      <option value="Pass exams">Pass exams</option>
+                      <option value="Master subject">Master subject</option>
+                      <option value="Competitive exam">Competitive exam</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Available Hours/Day</label>
+                    <input
+                      type="number"
+                      value={personalData.availableHoursPerDay}
+                      onChange={(e) => setPersonalData({...personalData, availableHoursPerDay: parseInt(e.target.value)})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      min="1"
+                      max="12"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Study Time</label>
+                    <select 
+                      value={personalData.preferredStudyTime}
+                      onChange={(e) => setPersonalData({...personalData, preferredStudyTime: e.target.value})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="morning">Morning (6AM-12PM)</option>
+                      <option value="afternoon">Afternoon (12PM-5PM)</option>
+                      <option value="evening">Evening (5PM-10PM)</option>
+                      <option value="night">Night (10PM-2AM)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Learning Style</label>
+                    <select 
+                      value={personalData.learningStyle}
+                      onChange={(e) => setPersonalData({...personalData, learningStyle: e.target.value})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="visual">Visual (diagrams, videos)</option>
+                      <option value="auditory">Auditory (lectures, discussions)</option>
+                      <option value="reading">Reading/Writing (notes, texts)</option>
+                      <option value="kinesthetic">Kinesthetic (hands-on practice)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Difficulty Level</label>
+                    <select 
+                      value={personalData.difficultyLevel}
+                      onChange={(e) => setPersonalData({...personalData, difficultyLevel: e.target.value})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Break Duration (minutes)</label>
+                    <input
+                      type="number"
+                      value={personalData.breakDuration}
+                      onChange={(e) => setPersonalData({...personalData, breakDuration: parseInt(e.target.value)})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      min="5"
+                      max="30"
+                    />
+                  </div>
+                </div>
+
+                {/* Exam Dates Section (Optional) */}
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                    Upcoming Exam Dates (Optional)
+                  </h3>
+                  <div className="space-y-3">
+                    {personalData.examDates.map((exam, idx) => (
+                      <div key={idx} className="grid grid-cols-2 gap-3">
+                        <input
+                          type="text"
+                          placeholder="Subject name"
+                          value={exam.subject}
+                          onChange={(e) => {
+                            const newExamDates = [...personalData.examDates];
+                            newExamDates[idx].subject = e.target.value;
+                            setPersonalData({...personalData, examDates: newExamDates});
+                          }}
+                          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        />
+                        <div className="flex gap-2">
+                          <input
+                            type="date"
+                            value={exam.date}
+                            onChange={(e) => {
+                              const newExamDates = [...personalData.examDates];
+                              newExamDates[idx].date = e.target.value;
+                              setPersonalData({...personalData, examDates: newExamDates});
+                            }}
+                            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          />
+                          <button
+                            onClick={() => {
+                              const newExamDates = personalData.examDates.filter((_, i) => i !== idx);
+                              setPersonalData({...personalData, examDates: newExamDates});
+                            }}
+                            className="px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      onClick={() => {
+                        setPersonalData({
+                          ...personalData,
+                          examDates: [...personalData.examDates, { subject: '', date: '' }]
+                        });
+                      }}
+                      className="w-full px-4 py-2 border-2 border-dashed border-blue-300 text-blue-600 rounded-lg hover:bg-blue-50 flex items-center justify-center gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Exam Date
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setShowPersonalDataForm(false)}
+                  className="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+                >
+                  Save Preferences & Update Schedule
+                </button>
+              </div>
+            )}
+
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-blue-100 text-sm">Study Streak</p>
+                    <p className="text-3xl font-bold">{studyStreak} days</p>
+                  </div>
+                  <Zap className="w-10 h-10 text-blue-200" />
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-purple-100 text-sm">Total Hours</p>
+                    <p className="text-3xl font-bold">{totalStudyHours}h</p>
+                  </div>
+                  <Clock className="w-10 h-10 text-purple-200" />
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-green-100 text-sm">Avg Focus</p>
+                    <p className="text-3xl font-bold">86%</p>
+                  </div>
+                  <Brain className="w-10 h-10 text-green-200" />
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-orange-100 text-sm">Topics Done</p>
+                    <p className="text-3xl font-bold">31</p>
+                  </div>
+                  <Trophy className="w-10 h-10 text-orange-200" />
+                </div>
+              </div>
+            </div>
+
+            {/* Main Planner Card */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-purple-600" />
-                Smart Study Planner
-              </h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-purple-600" />
+                  Smart Study Planner
+                </h2>
+                <button
+                  onClick={() => setShowPersonalDataForm(!showPersonalDataForm)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                  Customize
+                </button>
+              </div>
               
-              <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                <h4 className="font-semibold text-purple-900 mb-2">AI Recommendations for Today:</h4>
-                <ul className="space-y-2 text-sm text-purple-800">
-                  <li className="flex items-center gap-2">
-                    <Target className="w-4 h-4" />
-                    Focus on Mathematics (Exam in 7 days)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    Best study time: 9:00 AM - 11:00 AM (Peak focus hours)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Brain className="w-4 h-4" />
-                    Recommended: 2x 25-minute Pomodoro sessions
-                  </li>
-                </ul>
+              {/* AI Recommendations - Enhanced with Personal Data */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+                <div className="flex items-start gap-3 mb-3">
+                  <Lightbulb className="w-5 h-5 text-purple-600 mt-1" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-purple-900 mb-2">AI-Powered Recommendations (Personalized for You):</h4>
+                    <ul className="space-y-2 text-sm text-purple-800">
+                      <li className="flex items-center gap-2">
+                        <Target className="w-4 h-4" />
+                        <span>Focus on <strong>{personalData.focusSubjects[0]}</strong> (Exam in 7 days) - Priority: HIGH</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        <span>Best study time: {personalData.preferredStudyTime === 'morning' ? '9:00 AM - 11:00 AM' : 
+                          personalData.preferredStudyTime === 'afternoon' ? '2:00 PM - 4:00 PM' :
+                          personalData.preferredStudyTime === 'evening' ? '6:00 PM - 8:00 PM' : '10:00 PM - 12:00 AM'} 
+                          (Peak focus hours based on your preference)</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Brain className="w-4 h-4" />
+                        <span>Recommended: {personalData.sessionsPerDay}x 25-minute Pomodoro sessions with {personalData.breakDuration}-min breaks</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>Weak area detected: <strong>Chemistry</strong> - Schedule extra review time</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        <span>Learning style: <strong>{personalData.learningStyle}</strong> - Use {
+                          personalData.learningStyle === 'visual' ? 'diagrams and videos' :
+                          personalData.learningStyle === 'auditory' ? 'recorded lectures' :
+                          personalData.learningStyle === 'reading' ? 'detailed notes' : 'practice exercises'
+                        }</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Performance Analytics */}
+              <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
+                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                  Weekly Performance Analytics
+                </h3>
+                <div className="space-y-4">
+                  {/* Hours Graph */}
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Study Hours (Last 7 days)</p>
+                    <div className="flex items-end gap-2 h-32">
+                      {performanceData.map((day, idx) => (
+                        <div key={idx} className="flex-1 flex flex-col items-center">
+                          <div className="w-full bg-blue-100 rounded-t relative" style={{height: `${(day.hoursStudied / 5) * 100}%`}}>
+                            <div className="w-full bg-blue-500 rounded-t absolute bottom-0" style={{height: '100%'}}></div>
+                          </div>
+                          <span className="text-xs text-gray-600 mt-1">{day.date.split('-')[2]}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 mt-2">
+                      <span>0h</span>
+                      <span>5h</span>
+                    </div>
+                  </div>
+
+                  {/* Focus Score */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <p className="text-sm text-gray-600 mb-1">Average Focus Score</p>
+                      <p className="text-2xl font-bold text-green-600">
+                        {Math.round(performanceData.reduce((acc, d) => acc + d.focusScore, 0) / performanceData.length)}%
+                      </p>
+                      <p className="text-xs text-green-700 mt-1">↑ 5% from last week</p>
+                    </div>
+                    <div className="p-3 bg-purple-50 rounded-lg">
+                      <p className="text-sm text-gray-600 mb-1">Topics Completed</p>
+                      <p className="text-2xl font-bold text-purple-600">
+                        {performanceData.reduce((acc, d) => acc + d.topicsCompleted, 0)}
+                      </p>
+                      <p className="text-xs text-purple-700 mt-1">This week</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Weekly Calendar */}
-              <div className="grid grid-cols-7 gap-2 mb-6">
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => (
-                  <div key={day} className={`text-center p-2 rounded-lg ${idx === 2 ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-50'}`}>
-                    <div className="text-xs font-semibold text-gray-600">{day}</div>
-                    <div className="text-lg font-bold text-gray-900">{15 + idx}</div>
-                  </div>
-                ))}
+              <div className="mb-6">
+                <h3 className="font-bold text-gray-900 mb-3">Weekly Overview</h3>
+                <div className="grid grid-cols-7 gap-2">
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => (
+                    <div key={day} className={`text-center p-3 rounded-lg border-2 ${
+                      idx === 2 ? 'bg-blue-100 border-blue-500' : 'bg-gray-50 border-transparent'
+                    }`}>
+                      <div className="text-xs font-semibold text-gray-600">{day}</div>
+                      <div className="text-lg font-bold text-gray-900">{15 + idx}</div>
+                      <div className="text-xs text-gray-500 mt-1">{performanceData[idx]?.hoursStudied || 0}h</div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Today's Schedule */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3">Today's Schedule</h3>
+              {/* Today's Schedule - Adjusted based on personal data */}
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-bold text-gray-900">Today's Schedule</h3>
+                  <span className="text-sm text-gray-500">Goal: {personalData.availableHoursPerDay} hours</span>
+                </div>
                 <div className="space-y-2">
                   {[
-                    { time: '9:00 - 10:00', subject: 'Mathematics', topic: 'Derivatives', status: 'completed' },
-                    { time: '10:30 - 11:30', subject: 'Physics', topic: 'Newton\'s Laws', status: 'in-progress' },
-                    { time: '14:00 - 15:00', subject: 'Chemistry', topic: 'Chemical Bonds', status: 'pending' },
-                    { time: '16:00 - 17:00', subject: 'Review Quiz', topic: 'Mathematics', status: 'pending' },
+                    { time: '9:00 - 10:00', subject: personalData.focusSubjects[0], topic: 'Derivatives & Integration', status: 'completed', priority: 'high' },
+                    { time: '10:30 - 11:30', subject: personalData.focusSubjects[1] || 'Physics', topic: 'Newton\'s Laws', status: 'in-progress', priority: 'high' },
+                    { time: '14:00 - 15:00', subject: personalData.weakAreas[0] || 'Chemistry', topic: 'Chemical Bonds (Weak Area)', status: 'pending', priority: 'medium' },
+                    { time: '16:00 - 17:00', subject: 'Review Quiz', topic: personalData.focusSubjects[0], status: 'pending', priority: 'high' },
                   ].map((task, idx) => (
-                    <div key={idx} className={`flex items-center gap-4 p-3 border rounded-lg ${
-                      task.status === 'completed' ? 'bg-green-50 border-green-200' :
-                      task.status === 'in-progress' ? 'bg-blue-50 border-blue-200' :
-                      'bg-gray-50 border-gray-200'
+                    <div key={idx} className={`flex items-center gap-4 p-3 border-l-4 rounded-lg ${
+                      task.status === 'completed' ? 'bg-green-50 border-green-500' :
+                      task.status === 'in-progress' ? 'bg-blue-50 border-blue-500' :
+                      'bg-gray-50 border-gray-300'
                     }`}>
                       <div className={`w-3 h-3 rounded-full ${
                         task.status === 'completed' ? 'bg-green-500' :
@@ -752,27 +1132,135 @@ Example:
                         'bg-gray-300'
                       }`}></div>
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900">{task.subject}</div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-gray-900">{task.subject}</span>
+                          {task.priority === 'high' && (
+                            <span className="text-xs px-2 py-0.5 bg-red-100 text-red-700 rounded">HIGH</span>
+                          )}
+                        </div>
                         <div className="text-sm text-gray-600">{task.topic}</div>
                       </div>
                       <div className="text-sm text-gray-600">{task.time}</div>
+                      {task.status === 'pending' && (
+                        <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                          Start
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Pomodoro Timer */}
-              <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg text-center">
-                <h3 className="font-bold text-gray-900 mb-4">Pomodoro Timer</h3>
-                <div className="text-6xl font-bold text-blue-600 mb-4">25:00</div>
-                <div className="flex gap-3 justify-center">
-                  <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                    Start
-                  </button>
-                  <button className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-                    Reset
-                  </button>
+              {/* Spaced Repetition Reminders */}
+              <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <Timer className="w-5 h-5 text-yellow-600" />
+                  Spaced Repetition Review
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between p-2 bg-white rounded">
+                    <span className="text-gray-700">Linear Algebra - Chapter 3</span>
+                    <span className="text-yellow-700 font-semibold">Review in 2 days</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-white rounded">
+                    <span className="text-gray-700">Thermodynamics - Laws</span>
+                    <span className="text-yellow-700 font-semibold">Review today</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-white rounded">
+                    <span className="text-gray-700">Organic Chemistry - Reactions</span>
+                    <span className="text-red-700 font-semibold">Overdue (1 day)</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Enhanced Pomodoro Timer */}
+              <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
+                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Timer className="w-5 h-5 text-blue-600" />
+                  Smart Pomodoro Timer
+                </h3>
+                <div className="text-center">
+                  <div className="text-6xl font-bold text-blue-600 mb-4">
+                    {Math.floor(pomodoroTime / 60).toString().padStart(2, '0')}:
+                    {(pomodoroTime % 60).toString().padStart(2, '0')}
+                  </div>
+                  <div className="flex gap-3 justify-center mb-4">
+                    <button 
+                      onClick={() => setIsTimerRunning(!isTimerRunning)}
+                      className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                    >
+                      {isTimerRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      {isTimerRunning ? 'Pause' : 'Start'}
+                    </button>
+                    <button 
+                      onClick={() => setPomodoroTime(25 * 60)}
+                      className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                  <div className="flex gap-2 justify-center">
+                    <button 
+                      onClick={() => setPomodoroTime(25 * 60)}
+                      className="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      25 min
+                    </button>
+                    <button 
+                      onClick={() => setPomodoroTime(personalData.breakDuration * 60)}
+                      className="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      {personalData.breakDuration} min break
+                    </button>
+                    <button 
+                      onClick={() => setPomodoroTime(15 * 60)}
+                      className="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      15 min
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-4">
+                    Session {Math.floor((25 * 60 - pomodoroTime) / (25 * 60) * personalData.sessionsPerDay) + 1} of {personalData.sessionsPerDay} today
+                  </p>
+                </div>
+              </div>
+
+              {/* Study Tips Based on Learning Style */}
+              <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-teal-50 border border-green-200 rounded-lg">
+                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-green-600" />
+                  Tips for {personalData.learningStyle.charAt(0).toUpperCase() + personalData.learningStyle.slice(1)} Learners
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {personalData.learningStyle === 'visual' && (
+                    <>
+                      <li>• Use mind maps and flowcharts to visualize concepts</li>
+                      <li>• Watch educational videos and animations</li>
+                      <li>• Color-code your notes and use highlighters</li>
+                    </>
+                  )}
+                  {personalData.learningStyle === 'auditory' && (
+                    <>
+                      <li>• Record yourself reading notes and listen back</li>
+                      <li>• Join study groups for discussions</li>
+                      <li>• Use text-to-speech for reading materials</li>
+                    </>
+                  )}
+                  {personalData.learningStyle === 'reading' && (
+                    <>
+                      <li>• Write detailed summaries after each session</li>
+                      <li>• Create comprehensive study guides</li>
+                      <li>• Use the Cornell note-taking method</li>
+                    </>
+                  )}
+                  {personalData.learningStyle === 'kinesthetic' && (
+                    <>
+                      <li>• Practice with hands-on experiments and labs</li>
+                      <li>• Use physical objects to model concepts</li>
+                      <li>• Take frequent breaks to move around</li>
+                    </>
+                  )}
+                </ul>
               </div>
             </div>
           </div>
