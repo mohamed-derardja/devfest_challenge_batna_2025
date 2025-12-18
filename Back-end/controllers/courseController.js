@@ -15,6 +15,34 @@ exports.getCourses = async (req, res, next) => {
     }
 };
 
+// @desc    Get all topics (from all courses)
+// @route   GET /api/topics
+exports.getAllTopics = async (req, res, next) => {
+    try {
+        const courses = await Course.find().select('topics courseName _id');
+        
+        let allTopics = [];
+        courses.forEach(course => {
+            if (course.topics && course.topics.length > 0) {
+                const courseTopics = course.topics.map(topic => ({
+                    ...topic.toObject(),
+                    courseId: course._id,
+                    courseName: course.courseName
+                }));
+                allTopics = [...allTopics, ...courseTopics];
+            }
+        });
+
+        res.status(200).json({
+            success: true,
+            count: allTopics.length,
+            data: allTopics
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 // @desc    Get single course
 // @route   GET /api/courses/:id
 exports.getCourse = async (req, res, next) => {
@@ -118,6 +146,29 @@ exports.addTopic = async (req, res, next) => {
         res.status(201).json({
             success: true,
             data: course
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get topics for a specific course
+// @route   GET /api/courses/:id/topics
+exports.getCourseTopics = async (req, res, next) => {
+    try {
+        const course = await Course.findById(req.params.id);
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                error: 'Course not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            count: course.topics.length,
+            data: course.topics
         });
     } catch (error) {
         next(error);

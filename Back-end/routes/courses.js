@@ -6,6 +6,8 @@ const {
     createCourse,
     updateCourse,
     deleteCourse,
+
+    getCourseTopics,
     addTopic,
     updateTopic,
     deleteTopic
@@ -21,6 +23,7 @@ router.route('/:id')
     .delete(deleteCourse);
 
 router.route('/:id/topics')
+    .get(getCourseTopics)
     .post(addTopic);
 
 router.route('/:id/topics/:topicId')

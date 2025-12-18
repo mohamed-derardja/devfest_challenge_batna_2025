@@ -295,11 +295,17 @@ const seedDatabase = async () => {
         console.log(`- ${createdStudents.length} students with enrolled courses`);
         console.log('\nYou can now test the API endpoints!');
 
-        process.exit(0);
+        if (require.main === module) {
+            process.exit(0);
+        }
     } catch (error) {
         console.error('Error seeding database:', error);
         process.exit(1);
     }
 };
 
-seedDatabase();
+if (require.main === module) {
+    seedDatabase();
+}
+
+module.exports = seedDatabase;

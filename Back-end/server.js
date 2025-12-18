@@ -1,4 +1,6 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -8,6 +10,8 @@ const errorHandler = require('./middleware/errorHandler');
 // Import routes
 const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
+const aiRoutes = require('./routes/ai');
+const topicRoutes = require('./routes/topics');
 
 // Initialize Express app
 const app = express();
@@ -28,13 +32,17 @@ app.get('/', (req, res) => {
         version: '1.0.0',
         endpoints: {
             students: '/api/students',
-            courses: '/api/courses'
+            courses: '/api/courses',
+            topics: '/api/topics',
+            ai: '/api/ai'
         }
     });
 });
 
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/topics', topicRoutes);
 
 // Error handler (should be last)
 app.use(errorHandler);
@@ -42,7 +50,7 @@ app.use(errorHandler);
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
 
 module.exports = app;
