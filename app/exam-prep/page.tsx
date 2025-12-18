@@ -7,10 +7,10 @@ import {
   Upload, 
   Brain, 
   Calendar, 
-  Target, 
+  Target,
+  FileText, 
   Clock, 
   TrendingUp,
-  FileText,
   PlayCircle,
   CheckCircle,
   Trophy
@@ -18,6 +18,15 @@ import {
 
 export default function ExamPrepPage() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'quiz' | 'pdf' | 'resources' | 'planner'>('dashboard');
+  const [quizInputMethod, setQuizInputMethod] = useState<'text' | 'upload'>('text');
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [textContent, setTextContent] = useState('');
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadedFile(e.target.files[0]);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -249,10 +258,157 @@ export default function ExamPrepPage() {
         {activeTab === 'quiz' && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <Brain className="w-5 h-5 text-blue-600" />
                 AI Quiz Generator
               </h2>
+
+              {/* Input Method Selection */}
+              <div className="mb-6">
+                <label className="block text-sm font-bold text-gray-700 mb-3">
+                  Choose Input Method
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={() => setQuizInputMethod('text')}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      quizInputMethod === 'text'
+                        ? 'border-blue-600 bg-blue-50 shadow-lg shadow-blue-500/20'
+                        : 'border-gray-200 hover:border-blue-300 bg-white'
+                    }`}
+                  >
+                    <FileText className={`w-8 h-8 mx-auto mb-2 ${
+                      quizInputMethod === 'text' ? 'text-blue-600' : 'text-gray-400'
+                    }`} />
+                    <div className="text-center">
+                      <h3 className={`font-bold ${
+                        quizInputMethod === 'text' ? 'text-blue-900' : 'text-gray-900'
+                      }`}>
+                        Text Input
+                      </h3>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Paste or type your content
+                      </p>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setQuizInputMethod('upload')}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      quizInputMethod === 'upload'
+                        ? 'border-purple-600 bg-purple-50 shadow-lg shadow-purple-500/20'
+                        : 'border-gray-200 hover:border-purple-300 bg-white'
+                    }`}
+                  >
+                    <Upload className={`w-8 h-8 mx-auto mb-2 ${
+                      quizInputMethod === 'upload' ? 'text-purple-600' : 'text-gray-400'
+                    }`} />
+                    <div className="text-center">
+                      <h3 className={`font-bold ${
+                        quizInputMethod === 'upload' ? 'text-purple-900' : 'text-gray-900'
+                      }`}>
+                        Upload File
+                      </h3>
+                      <p className="text-xs text-gray-600 mt-1">
+                        PDF or TXT document
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Text Input Method */}
+              {quizInputMethod === 'text' && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Enter Content for Quiz Generation
+                  </label>
+                  <textarea
+                    value={textContent}
+                    onChange={(e) => setTextContent(e.target.value)}
+                    placeholder="Paste your study material, lecture notes, or any text content here. The AI will analyze it and generate questions based on the content.
+
+Example:
+- Copy text from your textbook
+- Paste lecture notes
+- Enter topic descriptions
+- Add formulas or concepts"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all min-h-[200px] font-mono text-sm"
+                  />
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xs text-gray-500">
+                      {textContent.length} characters • {textContent.split(/\s+/).filter(Boolean).length} words
+                    </p>
+                    {textContent.length > 0 && (
+                      <button
+                        onClick={() => setTextContent('')}
+                        className="text-xs text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* File Upload Method */}
+              {quizInputMethod === 'upload' && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Document
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-purple-400 transition-colors bg-gradient-to-br from-purple-50 to-pink-50">
+                    <input
+                      type="file"
+                      accept=".pdf,.txt"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="quiz-file-upload"
+                    />
+                    <label htmlFor="quiz-file-upload" className="cursor-pointer">
+                      <Upload className="w-12 h-12 text-purple-400 mx-auto mb-3" />
+                      {uploadedFile ? (
+                        <div className="space-y-2">
+                          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 border border-purple-300 rounded-lg">
+                            <FileText className="w-5 h-5 text-purple-600" />
+                            <span className="font-medium text-purple-900">{uploadedFile.name}</span>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setUploadedFile(null);
+                              }}
+                              className="ml-2 text-purple-600 hover:text-purple-800"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            {(uploadedFile.size / 1024).toFixed(2)} KB
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-lg font-semibold text-gray-900 mb-2">
+                            Drop your file here or click to browse
+                          </p>
+                          <p className="text-sm text-gray-600 mb-4">
+                            Supports PDF and TXT files (Max 10MB)
+                          </p>
+                          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                            <Upload className="w-4 h-4" />
+                            Choose File
+                          </div>
+                        </>
+                      )}
+                    </label>
+                  </div>
+                  <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                    <p className="text-xs text-purple-800 font-medium">
+                      💡 AI will extract text from your document and generate relevant questions
+                    </p>
+                  </div>
+                </div>
+              )}
               
               <div className="space-y-4 mb-6">
                 <div>

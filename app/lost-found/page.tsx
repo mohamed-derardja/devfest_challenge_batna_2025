@@ -19,12 +19,32 @@ import {
   Shield,
   TrendingUp,
   Eye,
-  MessageSquare
+  MessageSquare,
+  Send,
+  X,
+  Lock,
+  CheckCircle2,
+  ArrowRight,
+  Image as ImageIcon,
+  FileText
 } from 'lucide-react';
 
 export default function LostFoundPage() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'lost' | 'found' | 'post' | 'heatmap'>('dashboard');
   const [postType, setPostType] = useState<'lost' | 'found'>('lost');
+  
+  // Messaging System
+  const [showMessaging, setShowMessaging] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [messageText, setMessageText] = useState('');
+  const [messages, setMessages] = useState<any[]>([]);
+  
+  // Verification System
+  const [showVerification, setShowVerification] = useState(false);
+  const [verificationAnswers, setVerificationAnswers] = useState<any>({});
+  
+  // Status Tracking
+  const [showStatusTimeline, setShowStatusTimeline] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -304,7 +324,7 @@ export default function LostFoundPage() {
                     location: 'Library 3rd Floor',
                     date: 'Dec 15, 2025',
                     reporter: 'Ahmed K.',
-                    image: '💻',
+                    image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&h=600&fit=crop',
                     color: 'Black',
                     status: 'Active',
                     matches: 1
@@ -316,7 +336,7 @@ export default function LostFoundPage() {
                     location: 'Cafeteria',
                     date: 'Dec 14, 2025',
                     reporter: 'Anonymous',
-                    image: '🆔',
+                    image: 'https://images.unsplash.com/photo-1633409361618-c73427e4e206?w=800&h=600&fit=crop',
                     color: 'White/Blue',
                     status: 'Active',
                     matches: 0
@@ -328,7 +348,7 @@ export default function LostFoundPage() {
                     location: 'Sports Complex',
                     date: 'Dec 13, 2025',
                     reporter: 'Karim B.',
-                    image: '🎒',
+                    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=600&fit=crop',
                     color: 'Black',
                     status: 'Active',
                     matches: 2
@@ -340,7 +360,7 @@ export default function LostFoundPage() {
                     location: 'Cafeteria',
                     date: 'Dec 14, 2025',
                     reporter: 'Sarah M.',
-                    image: '🍾',
+                    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&h=600&fit=crop',
                     color: 'Red',
                     status: 'Matched',
                     matches: 1
@@ -352,7 +372,7 @@ export default function LostFoundPage() {
                     location: 'Computer Lab A',
                     date: 'Dec 12, 2025',
                     reporter: 'Yasmine H.',
-                    image: '🎧',
+                    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop',
                     color: 'Blue',
                     status: 'Active',
                     matches: 1
@@ -364,78 +384,107 @@ export default function LostFoundPage() {
                     location: 'Classroom 204',
                     date: 'Dec 11, 2025',
                     reporter: 'Mohamed R.',
-                    image: '📚',
+                    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&h=600&fit=crop',
                     color: 'Green',
                     status: 'Active',
                     matches: 0
                   },
                 ].map((item, idx) => (
-                  <div key={idx} className="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl border-2 border-gray-200 hover:border-red-300 p-6 hover:shadow-xl transition-all duration-300">
-                    {/* Status Badge */}
-                    <div className="absolute -top-3 -right-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-lg ${
-                        item.status === 'Matched' 
-                          ? 'bg-green-500 text-white animate-pulse' 
-                          : 'bg-red-500 text-white'
-                      }`}>
-                        {item.status}
-                      </span>
+                  <div key={idx} className="group relative bg-white rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                    {/* Item Image */}
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                      <img 
+                        src={item.image} 
+                        alt={item.item}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {/* Status Badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-lg ${
+                          item.status === 'Matched' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-red-500 text-white'
+                        }`}>
+                          {item.status === 'Matched' ? 'Matched' : 'Lost'}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Item Icon */}
-                    <div className="text-center mb-4">
-                      <div className="text-6xl mb-2">{item.image}</div>
-                      <h3 className="font-bold text-lg text-gray-900 group-hover:text-red-700 transition-colors">{item.item}</h3>
-                      <span className="inline-block px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full mt-2">
-                        {item.category}
-                      </span>
-                    </div>
+                    {/* Item Content */}
+                    <div className="p-5">
+                      {/* Item Header */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                          item.category === 'Electronics' ? 'bg-blue-100' :
+                          item.category === 'Documents' ? 'bg-purple-100' :
+                          item.category === 'Books' ? 'bg-green-100' :
+                          'bg-orange-100'
+                        }`}>
+                          {item.category === 'Electronics' ? '💻' :
+                           item.category === 'Documents' ? '🆔' :
+                           item.category === 'Books' ? '📚' :
+                           '🎒'}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-lg text-gray-900 group-hover:text-red-600 transition-colors">{item.item}</h3>
+                          <p className="text-sm text-gray-600 mt-0.5">{item.description}</p>
+                        </div>
+                      </div>
 
-                    {/* Item Details */}
-                    <div className="space-y-2 mb-4 text-sm">
-                      <div className="flex items-start gap-2">
-                        <AlertCircle className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
-                        <p className="text-gray-600">{item.description}</p>
+                      {/* Item Details */}
+                      <div className="space-y-2 mb-4 text-sm border-t border-gray-100 pt-3">
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <MapPin className="w-4 h-4 text-gray-400" />
+                          <span className="font-medium">{item.location}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-700 font-medium">{item.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-600">{item.date}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-600">Reported by {item.reporter}</span>
-                      </div>
-                    </div>
 
                     {/* Matches Indicator */}
                     {item.matches > 0 && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Eye className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm font-semibold text-blue-900">
-                              {item.matches} Potential Match{item.matches > 1 ? 'es' : ''}
-                            </span>
-                          </div>
-                          <button className="text-blue-600 hover:text-blue-700 text-xs font-medium">
-                            View →
-                          </button>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-2.5 mb-3">
+                        <div className="flex items-center gap-2">
+                          <Eye className="w-4 h-4 text-blue-600" />
+                          <span className="text-xs font-semibold text-blue-900">
+                            {item.matches} Potential Match{item.matches > 1 ? 'es' : ''}
+                          </span>
                         </div>
                       </div>
                     )}
 
                     {/* Actions */}
-                    <div className="flex gap-2">
-                      <button className="flex-1 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors">
-                        View Details
+                    <div className="space-y-2">
+                      <button 
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setShowStatusTimeline(true);
+                        }}
+                        className="w-full px-4 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-sm"
+                      >
+                        View Status
                       </button>
-                      <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
-                        <MessageSquare className="w-4 h-4" />
-                      </button>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button 
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowMessaging(true);
+                          }}
+                          className="px-4 py-2 bg-blue-50 text-blue-700 text-sm font-semibold rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                          Message
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowVerification(true);
+                          }}
+                          className="px-4 py-2 bg-green-50 text-green-700 text-sm font-semibold rounded-lg hover:bg-green-100 transition-colors flex items-center justify-center gap-2"
+                        >
+                          <Shield className="w-4 h-4" />
+                          Verify
+                        </button>
+                      </div>
+                    </div>
                     </div>
                   </div>
                 ))}
@@ -454,10 +503,14 @@ export default function LostFoundPage() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Search found items by keyword..."
+                    placeholder="Search by type, color, or location..."
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   />
                 </div>
+                <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg shadow-purple-500/30 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  AI Match
+                </button>
                 <select className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
                   <option>All Categories</option>
                   <option>Electronics</option>
@@ -480,9 +533,9 @@ export default function LostFoundPage() {
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600" />
-                    Found Items Collection
+                    Recently Found Items
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">18 items available • 5 claimed today</p>
+                  <p className="text-sm text-gray-600 mt-1">8 items</p>
                 </div>
                 <div className="flex gap-2">
                   <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
@@ -497,37 +550,37 @@ export default function LostFoundPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[
                   {
-                    item: 'Black HP Laptop',
+                    item: 'Laptop',
                     category: 'Electronics',
-                    description: 'Found in library study room',
-                    location: 'Library Study Room 3B',
+                    description: 'MacBook Pro 14-inch...',
+                    location: 'Library',
                     date: 'Dec 15, 2025',
                     finder: 'Sarah M.',
-                    image: '💻',
+                    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=600&fit=crop',
                     color: 'Black',
-                    status: 'Matched',
+                    status: 'Available',
                     matches: 1
                   },
                   {
-                    item: 'Blue Water Bottle',
-                    category: 'Accessories',
-                    description: 'Plastic water bottle',
-                    location: 'Gym Locker Room',
+                    item: 'Student Card',
+                    category: 'Documents',
+                    description: 'University ID card with...',
+                    location: 'Library',
                     date: 'Dec 14, 2025',
                     finder: 'Security Office',
-                    image: '🧴',
+                    image: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&h=600&fit=crop',
                     color: 'Blue',
                     status: 'Available',
                     matches: 0
                   },
                   {
-                    item: 'Keys with GDG Keychain',
+                    item: 'Keys',
                     category: 'Accessories',
-                    description: '3 keys on a GDG keychain',
-                    location: 'Main Building Entrance',
+                    description: 'Car keys with university...',
+                    location: 'Cafeteria',
                     date: 'Dec 15, 2025',
                     finder: 'Amina L.',
-                    image: '🔑',
+                    image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?w=800&h=600&fit=crop',
                     color: 'Silver',
                     status: 'Available',
                     matches: 0
@@ -539,7 +592,7 @@ export default function LostFoundPage() {
                     location: 'Near Cafeteria',
                     date: 'Dec 14, 2025',
                     finder: 'Youcef K.',
-                    image: '🍾',
+                    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&h=600&fit=crop',
                     color: 'Red',
                     status: 'Matched',
                     matches: 1
@@ -569,72 +622,95 @@ export default function LostFoundPage() {
                     matches: 1
                   },
                 ].map((item, idx) => (
-                  <div key={idx} className="group relative bg-gradient-to-br from-white to-green-50 rounded-xl border-2 border-gray-200 hover:border-green-300 p-6 hover:shadow-xl transition-all duration-300">
-                    {/* Status Badge */}
-                    <div className="absolute -top-3 -right-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-lg ${
-                        item.status === 'Matched' 
-                          ? 'bg-green-500 text-white animate-pulse' 
-                          : 'bg-blue-500 text-white'
-                      }`}>
-                        {item.status}
-                      </span>
-                    </div>
-
-                    {/* Item Icon */}
-                    <div className="text-center mb-4">
-                      <div className="text-6xl mb-2">{item.image}</div>
-                      <h3 className="font-bold text-lg text-gray-900 group-hover:text-green-700 transition-colors">{item.item}</h3>
-                      <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full mt-2">
-                        {item.category}
-                      </span>
-                    </div>
-
-                    {/* Item Details */}
-                    <div className="space-y-2 mb-4 text-sm">
-                      <div className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
-                        <p className="text-gray-600">{item.description}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-700 font-medium">{item.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-600">{item.date}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-600">Found by {item.finder}</span>
+                  <div key={idx} className="group relative bg-white rounded-2xl border border-gray-200 hover:border-green-300 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                    {/* Item Image */}
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                      <img 
+                        src={item.image} 
+                        alt={item.item}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {/* Status Badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className="px-3 py-1.5 rounded-full text-xs font-bold shadow-lg bg-emerald-500 text-white">
+                          Found
+                        </span>
                       </div>
                     </div>
 
-                    {/* Matches Indicator */}
-                    {item.matches > 0 && (
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
-                        <div className="flex items-center justify-between">
+                    {/* Item Content */}
+                    <div className="p-5">
+                      {/* Item Header */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                          item.category === 'Electronics' ? 'bg-blue-100' :
+                          item.category === 'Documents' ? 'bg-purple-100' :
+                          'bg-orange-100'
+                        }`}>
+                          {item.category === 'Electronics' ? '💻' :
+                           item.category === 'Documents' ? '🆔' :
+                           '🔑'}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-lg text-gray-900 group-hover:text-green-600 transition-colors">{item.item}</h3>
+                          <p className="text-sm text-gray-600 mt-0.5">{item.description}</p>
+                        </div>
+                      </div>
+
+                      {/* Item Details */}
+                      <div className="space-y-2 mb-4 text-sm border-t border-gray-100 pt-3">
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <MapPin className="w-4 h-4 text-gray-400" />
+                          <span className="font-medium">{item.location}</span>
+                        </div>
+                      </div>
+
+                      {/* Matches Indicator */}
+                      {item.matches > 0 && (
+                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-2.5 mb-3">
                           <div className="flex items-center gap-2">
                             <TrendingUp className="w-4 h-4 text-orange-600" />
-                            <span className="text-sm font-semibold text-orange-900">
+                            <span className="text-xs font-semibold text-orange-900">
                               {item.matches} Potential Match{item.matches > 1 ? 'es' : ''}
                             </span>
                           </div>
-                          <button className="text-orange-600 hover:text-orange-700 text-xs font-medium">
-                            View →
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="space-y-2">
+                        <button 
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowVerification(true);
+                          }}
+                          className="w-full px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+                        >
+                          Claim Item
+                        </button>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button 
+                            onClick={() => {
+                              setSelectedItem(item);
+                              setShowMessaging(true);
+                            }}
+                            className="px-4 py-2 bg-blue-50 text-blue-700 text-sm font-semibold rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                            Chat
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setSelectedItem(item);
+                              setShowStatusTimeline(true);
+                            }}
+                            className="px-4 py-2 bg-purple-50 text-purple-700 text-sm font-semibold rounded-lg hover:bg-purple-100 transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Clock className="w-4 h-4" />
+                            Track
                           </button>
                         </div>
                       </div>
-                    )}
-
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      <button className="flex-1 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
-                        Claim Item
-                      </button>
-                      <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors">
-                        <MessageSquare className="w-4 h-4" />
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -953,6 +1029,382 @@ export default function LostFoundPage() {
           </div>
         )}
       </div>
+
+      {/* Messaging Modal */}
+      {showMessaging && selectedItem && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                    <MessageSquare className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Message About Item</h3>
+                    <p className="text-sm text-gray-600">{selectedItem.item}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowMessaging(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+              {messages.length === 0 ? (
+                <div className="text-center py-12">
+                  <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 font-medium">No messages yet</p>
+                  <p className="text-sm text-gray-400 mt-1">Start a conversation to claim this item</p>
+                </div>
+              ) : (
+                messages.map((msg, idx) => (
+                  <div key={idx} className={`flex ${msg.sent ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[70%] rounded-2xl px-4 py-3 ${
+                      msg.sent 
+                        ? 'bg-blue-600 text-white rounded-br-sm' 
+                        : 'bg-white text-gray-900 border border-gray-200 rounded-bl-sm'
+                    }`}>
+                      <p className="text-sm">{msg.text}</p>
+                      <span className={`text-xs mt-1 block ${msg.sent ? 'text-blue-100' : 'text-gray-500'}`}>
+                        {msg.time}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+              
+              {/* System Message for Privacy */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start gap-2">
+                <Shield className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-yellow-900">Privacy Protected</p>
+                  <p className="text-xs text-yellow-800 mt-1">
+                    Your contact information will only be shared after verification is complete.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Input Area */}
+            <div className="p-4 border-t border-gray-200 bg-white">
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  placeholder="Type your message..."
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && messageText.trim()) {
+                      setMessages([...messages, { 
+                        text: messageText, 
+                        sent: true, 
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      }]);
+                      setMessageText('');
+                    }
+                  }}
+                />
+                <button 
+                  onClick={() => {
+                    if (messageText.trim()) {
+                      setMessages([...messages, { 
+                        text: messageText, 
+                        sent: true, 
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      }]);
+                      setMessageText('');
+                    }
+                  }}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 font-semibold"
+                >
+                  <Send className="w-5 h-5" />
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Verification Modal */}
+      {showVerification && selectedItem && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Verify Ownership</h3>
+                    <p className="text-sm text-gray-600">Prove this item belongs to you</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowVerification(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Verification Form */}
+            <div className="p-6 space-y-6">
+              {/* Item Info */}
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h4 className="font-bold text-gray-900 mb-2">{selectedItem.item}</h4>
+                <p className="text-sm text-gray-600">{selectedItem.description}</p>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-4 h-4" />
+                    {selectedItem.location}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {selectedItem.date}
+                  </span>
+                </div>
+              </div>
+
+              {/* Security Questions */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                  <Lock className="w-5 h-5 text-blue-600" />
+                  Security Questions
+                </h4>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    1. What is the brand or model of this item? *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., HP EliteBook, Sony WH-1000XM4"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    onChange={(e) => setVerificationAnswers({...verificationAnswers, brand: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    2. Are there any unique marks or distinguishing features? *
+                  </label>
+                  <textarea
+                    placeholder="e.g., Scratch on the back, sticker, custom color"
+                    rows={3}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    onChange={(e) => setVerificationAnswers({...verificationAnswers, features: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    3. What was inside or attached to the item?
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., Books, charger, keychain"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    onChange={(e) => setVerificationAnswers({...verificationAnswers, contents: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              {/* Upload Additional Proof */}
+              <div>
+                <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-purple-600" />
+                  Additional Proof (Optional)
+                </h4>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                  <Camera className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-sm text-gray-600 mb-2">Upload a photo or receipt</p>
+                  <button className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm font-medium">
+                    Choose File
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setShowVerification(false)}
+                  className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowVerification(false);
+                    setShowStatusTimeline(true);
+                  }}
+                  className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center justify-center gap-2"
+                >
+                  <CheckCircle2 className="w-5 h-5" />
+                  Submit Verification
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Status Timeline Modal */}
+      {showStatusTimeline && selectedItem && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Item Status Timeline</h3>
+                    <p className="text-sm text-gray-600">{selectedItem.item}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowStatusTimeline(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div className="p-6">
+              <div className="space-y-6">
+                {/* Current Status Card */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                      <CheckCircle2 className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-green-900 text-lg">Verification Submitted</h4>
+                      <p className="text-sm text-green-700">Current Status</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-green-800 ml-13">
+                    Your verification request is being reviewed by the finder and admin team.
+                  </p>
+                </div>
+
+                {/* Timeline Steps */}
+                <div className="relative pl-8 space-y-8">
+                  {/* Timeline Line */}
+                  <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-500 via-blue-500 to-gray-300"></div>
+
+                  {/* Step 1: Reported */}
+                  <div className="relative">
+                    <div className="absolute -left-8 w-6 h-6 rounded-full bg-green-500 border-4 border-white shadow-lg flex items-center justify-center">
+                      <CheckCircle2 className="w-3 h-3 text-white" />
+                    </div>
+                    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-bold text-gray-900">Item Reported</h5>
+                        <span className="text-xs text-gray-500">Dec 15, 2025 - 10:30 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Item was reported as {selectedItem.status === 'Matched' ? 'found' : 'lost'} by {selectedItem.finder || selectedItem.reporter}</p>
+                    </div>
+                  </div>
+
+                  {/* Step 2: AI Matched */}
+                  <div className="relative">
+                    <div className="absolute -left-8 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg flex items-center justify-center">
+                      <TrendingUp className="w-3 h-3 text-white" />
+                    </div>
+                    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-bold text-gray-900">AI Match Found</h5>
+                        <span className="text-xs text-gray-500">Dec 15, 2025 - 11:45 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-600">System found a 95% match with a corresponding report</p>
+                    </div>
+                  </div>
+
+                  {/* Step 3: Verification Submitted */}
+                  <div className="relative">
+                    <div className="absolute -left-8 w-6 h-6 rounded-full bg-purple-500 border-4 border-white shadow-lg flex items-center justify-center animate-pulse">
+                      <Shield className="w-3 h-3 text-white" />
+                    </div>
+                    <div className="bg-white rounded-lg border-2 border-purple-200 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-bold text-gray-900">Verification Submitted</h5>
+                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold">In Progress</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Awaiting verification review by finder and admin</p>
+                    </div>
+                  </div>
+
+                  {/* Step 4: Claimed (Pending) */}
+                  <div className="relative opacity-50">
+                    <div className="absolute -left-8 w-6 h-6 rounded-full bg-gray-300 border-4 border-white shadow-lg"></div>
+                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-bold text-gray-600">Verification Approved</h5>
+                        <span className="text-xs text-gray-400">Pending</span>
+                      </div>
+                      <p className="text-sm text-gray-500">Waiting for admin approval</p>
+                    </div>
+                  </div>
+
+                  {/* Step 5: Ready for Pickup (Pending) */}
+                  <div className="relative opacity-50">
+                    <div className="absolute -left-8 w-6 h-6 rounded-full bg-gray-300 border-4 border-white shadow-lg"></div>
+                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-bold text-gray-600">Ready for Pickup</h5>
+                        <span className="text-xs text-gray-400">Pending</span>
+                      </div>
+                      <p className="text-sm text-gray-500">Item location and pickup details will be shared</p>
+                    </div>
+                  </div>
+
+                  {/* Step 6: Returned (Pending) */}
+                  <div className="relative opacity-50">
+                    <div className="absolute -left-8 w-6 h-6 rounded-full bg-gray-300 border-4 border-white shadow-lg"></div>
+                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-bold text-gray-600">Item Returned</h5>
+                        <span className="text-xs text-gray-400">Pending</span>
+                      </div>
+                      <p className="text-sm text-gray-500">Successful return will be confirmed</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notifications Settings */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+                  <div className="flex items-start gap-3">
+                    <Mail className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h5 className="font-bold text-blue-900 mb-1">Email Notifications Enabled</h5>
+                      <p className="text-sm text-blue-800">
+                        You'll receive updates at your university email for each status change
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
