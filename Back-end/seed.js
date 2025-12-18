@@ -150,15 +150,15 @@ const students = [
         email: 'ahmed.benali@example.com',
         year: 3,
         department: 'Computer Science',
-        gpa: 3.7,
-        enrolledCourses: [] // Will be populated after courses are created
+        averageGrade: 18.5,
+        enrolledCourses: []
     },
     {
         name: 'Sarah Mansouri',
         email: 'sarah.mansouri@example.com',
         year: 2,
         department: 'Computer Science',
-        gpa: 3.9,
+        averageGrade: 19.5,
         enrolledCourses: []
     },
     {
@@ -166,7 +166,7 @@ const students = [
         email: 'karim.zoubir@example.com',
         year: 4,
         department: 'Software Engineering',
-        gpa: 3.5,
+        averageGrade: 17.5,
         enrolledCourses: []
     },
     {
@@ -174,7 +174,7 @@ const students = [
         email: 'fatima.amrani@example.com',
         year: 1,
         department: 'Computer Science',
-        gpa: 3.8,
+        averageGrade: 19.0,
         enrolledCourses: []
     },
     {
@@ -182,7 +182,7 @@ const students = [
         email: 'youcef.bouazza@example.com',
         year: 3,
         department: 'Information Systems',
-        gpa: 3.4,
+        averageGrade: 17.0,
         enrolledCourses: []
     },
     {
@@ -190,7 +190,7 @@ const students = [
         email: 'amira.taleb@example.com',
         year: 2,
         department: 'Computer Science',
-        gpa: 3.6,
+        averageGrade: 18.0,
         enrolledCourses: []
     },
     {
@@ -198,7 +198,7 @@ const students = [
         email: 'mohamed.khelifi@example.com',
         year: 4,
         department: 'Software Engineering',
-        gpa: 3.3,
+        averageGrade: 16.5,
         enrolledCourses: []
     },
     {
@@ -206,7 +206,7 @@ const students = [
         email: 'nadia.cherif@example.com',
         year: 1,
         department: 'Computer Science',
-        gpa: 3.9,
+        averageGrade: 19.5,
         enrolledCourses: []
     },
     {
@@ -214,7 +214,7 @@ const students = [
         email: 'rachid.mekki@example.com',
         year: 3,
         department: 'Computer Science',
-        gpa: 3.7,
+        averageGrade: 18.5,
         enrolledCourses: []
     },
     {
@@ -222,7 +222,7 @@ const students = [
         email: 'leila.hamdi@example.com',
         year: 2,
         department: 'Information Systems',
-        gpa: 3.5,
+        averageGrade: 17.5,
         enrolledCourses: []
     }
 ];

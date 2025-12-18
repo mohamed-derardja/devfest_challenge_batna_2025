@@ -52,7 +52,7 @@ A Node.js + Express backend with MongoDB for managing students, courses, and stu
 ### Student
 - name, email, year, department
 - enrolledCourses (references to Course)
-- GPA
+- Average Grade (0–20 scale)
 
 ### Course
 - courseName, code, credits, semester, year

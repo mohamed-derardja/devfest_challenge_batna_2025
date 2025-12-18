@@ -39,10 +39,10 @@ const studentSchema = new mongoose.Schema({
             default: 'active'
         }
     }],
-    gpa: {
+    averageGrade: {
         type: Number,
         min: 0,
-        max: 4,
+        max: 20,
         default: 0
     }
 }, {
