@@ -112,28 +112,84 @@ export const authAPI = {
   },
 };
 
+// Helper function for file uploads
+const authFetchFormData = async (url: string, formData: FormData) => {
+  const token = getAuthToken();
+  
+  if (!token) {
+    throw new Error('Please log in to access this feature');
+  }
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      // Don't set Content-Type - browser will set it with boundary for FormData
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('token');
+      throw new Error('Session expired. Please log in again');
+    }
+    const error = await response.json().catch(() => ({ message: 'Request failed' }));
+    throw new Error(error.message || `HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
 // Lost & Found API
 export const lostFoundAPI = {
   async getLostItems() {
     return authFetch(`${API_URL}/lost-found/lost`);
   },
 
-  async createLostItem(data: any) {
-    return authFetch(`${API_URL}/lost-found/lost`, {
-      method: 'POST',
-      body: JSON.stringify(data),
+  async createLostItem(data: any, images?: File[]) {
+    const formData = new FormData();
+    
+    // Add text fields
+    Object.keys(data).forEach(key => {
+      if (data[key] !== undefined && data[key] !== null) {
+        formData.append(key, data[key]);
+      }
     });
+    
+    // Add images if provided
+    if (images && images.length > 0) {
+      images.forEach(image => {
+        formData.append('images', image);
+      });
+    }
+    
+    return authFetchFormData(`${API_URL}/lost-found/lost`, formData);
   },
 
   async getFoundItems() {
     return authFetch(`${API_URL}/lost-found/found`);
   },
 
-  async createFoundItem(data: any) {
-    return authFetch(`${API_URL}/lost-found/found`, {
-      method: 'POST',
-      body: JSON.stringify(data),
+  async createFoundItem(data: any, images?: File[]) {
+    const formData = new FormData();
+    
+    // Add text fields
+    Object.keys(data).forEach(key => {
+      if (data[key] !== undefined && data[key] !== null) {
+        formData.append(key, data[key]);
+      }
     });
+    
+    // Add images if provided
+    if (images && images.length > 0) {
+      images.forEach(image => {
+        formData.append('images', image);
+      });
+    }
+    
+    return authFetchFormData(`${API_URL}/lost-found/found`, formData);
   },
 
   async getMatches() {

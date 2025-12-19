@@ -4,6 +4,9 @@ const Task = require('./models/Task');
 const Reward = require('./models/Reward');
 const NewsUpdate = require('./models/NewsUpdate');
 const Document = require('./models/Document');
+const LostItem = require('./models/LostItem');
+const FoundItem = require('./models/FoundItem');
+const User = require('./models/User');
 
 // Sample tasks
 const sampleTasks = [
@@ -307,6 +310,112 @@ const sampleDocuments = [
   }
 ];
 
+// Sample Lost Items
+const sampleLostItems = [
+  {
+    title: 'Black iPhone 14 Pro',
+    description: 'Lost my black iPhone 14 Pro with a clear case. Has a small scratch on the back.',
+    category: 'electronics',
+    location: 'Library 3rd Floor',
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    brand: 'Apple',
+    uniqueMarks: 'Small scratch on back camera, custom wallpaper with family photo',
+    status: 'active'
+  },
+  {
+    title: 'Blue Backpack',
+    description: 'Lost my blue JanSport backpack with laptop inside. Contains important documents.',
+    category: 'bags',
+    location: 'Student Center',
+    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    brand: 'JanSport',
+    uniqueMarks: 'Name tag "Sarah M." on the front pocket, pink keychain attached',
+    status: 'active'
+  },
+  {
+    title: 'Silver Watch',
+    description: 'Lost my silver watch near the cafeteria. It was a gift from my grandfather.',
+    category: 'accessories',
+    location: 'Main Cafeteria',
+    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    brand: 'Casio',
+    uniqueMarks: 'Engraved "To John, Love Grandpa" on the back',
+    status: 'active'
+  },
+  {
+    title: 'Red Umbrella',
+    description: 'Lost my red folding umbrella after the rain yesterday.',
+    category: 'others',
+    location: 'Building A - Room 205',
+    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    uniqueMarks: 'Wooden handle with a small chip',
+    status: 'active'
+  },
+  {
+    title: 'Calculus Textbook',
+    description: 'Lost my Calculus textbook with all my notes inside. Desperately need it for finals.',
+    category: 'books',
+    location: 'Mathematics Building',
+    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    brand: 'Stewart',
+    uniqueMarks: 'Name written inside cover, lots of highlighted sections and margin notes',
+    status: 'active'
+  }
+];
+
+// Sample Found Items
+const sampleFoundItems = [
+  {
+    title: 'Black Smartphone',
+    description: 'Found a black smartphone near the entrance. Screen is locked.',
+    category: 'electronics',
+    location: 'Main Entrance',
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    status: 'available'
+  },
+  {
+    title: 'Blue Backpack with Laptop',
+    description: 'Found a blue backpack in the cafeteria. Contains a laptop and some books.',
+    category: 'bags',
+    location: 'Cafeteria Table 12',
+    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    status: 'available'
+  },
+  {
+    title: 'House Keys on Lanyard',
+    description: 'Found a set of house keys with a university lanyard attached.',
+    category: 'keys',
+    location: 'Parking Lot B',
+    date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    status: 'available'
+  },
+  {
+    title: 'Prescription Glasses',
+    description: 'Found black framed prescription glasses in the gym.',
+    category: 'accessories',
+    location: 'Gym Locker Room',
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    status: 'available'
+  },
+  {
+    title: 'Water Bottle',
+    description: 'Found a stainless steel water bottle with stickers.',
+    category: 'others',
+    location: 'Lecture Hall C',
+    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    uniqueMarks: 'Several band stickers and a motivational quote sticker',
+    status: 'available'
+  },
+  {
+    title: 'Math Textbook',
+    description: 'Found a Calculus textbook left on a bench.',
+    category: 'books',
+    location: 'Outside Library',
+    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    status: 'available'
+  }
+];
+
 async function seedDatabase() {
   try {
     // Connect to MongoDB
@@ -318,7 +427,21 @@ async function seedDatabase() {
     await Reward.deleteMany({});
     await NewsUpdate.deleteMany({});
     await Document.deleteMany({});
+    await LostItem.deleteMany({});
+    await FoundItem.deleteMany({});
     console.log('🗑️  Cleared existing data');
+
+    // Create a test user for lost/found items
+    let testUser = await User.findOne({ email: 'test@university.edu' });
+    if (!testUser) {
+      testUser = await User.create({
+        name: 'Test User',
+        email: 'test@university.edu',
+        password: 'test123',
+        role: 'student'
+      });
+      console.log('✅ Created test user for lost/found items');
+    }
 
     // Insert sample data
     await Task.insertMany(sampleTasks);
@@ -332,6 +455,15 @@ async function seedDatabase() {
 
     await Document.insertMany(sampleDocuments);
     console.log(`✅ Inserted ${sampleDocuments.length} documents/opportunities`);
+
+    // Add owner/finder to lost/found items
+    const lostItemsWithOwner = sampleLostItems.map(item => ({ ...item, owner: testUser._id }));
+    await LostItem.insertMany(lostItemsWithOwner);
+    console.log(`✅ Inserted ${sampleLostItems.length} lost items`);
+
+    const foundItemsWithFinder = sampleFoundItems.map(item => ({ ...item, finder: testUser._id }));
+    await FoundItem.insertMany(foundItemsWithFinder);
+    console.log(`✅ Inserted ${sampleFoundItems.length} found items`);
 
     console.log('\n🎉 Database seeded successfully!');
     process.exit(0);

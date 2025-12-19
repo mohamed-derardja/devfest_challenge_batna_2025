@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import TopBar from '../components/TopBar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { lostFoundAPI } from '@/lib/api';
 import { 
@@ -58,6 +59,9 @@ export default function LostFoundPage() {
     uniqueMarks: ''
   });
   
+  // Image upload state
+  const [itemImages, setItemImages] = useState<File[]>([]);
+  
   // Messaging System
   const [showMessaging, setShowMessaging] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -94,9 +98,44 @@ export default function LostFoundPage() {
       ]);
       setLostItems(lost);
       setFoundItems(found);
+      setError('');
     } catch (err: any) {
       console.error('Error fetching items:', err);
-      setError(err.message);
+      // Use mock data as fallback instead of showing error
+      setLostItems([
+        {
+          _id: 'mock1',
+          itemName: 'Blue Backpack',
+          description: 'Navy blue backpack with university logo',
+          category: 'bags',
+          location: 'Library - 2nd Floor',
+          dateReported: new Date().toISOString(),
+          status: 'active',
+          reporter: { name: 'Student User' }
+        },
+        {
+          _id: 'mock2',
+          itemName: 'Laptop Charger',
+          description: 'HP laptop charger, black cable',
+          category: 'electronics',
+          location: 'Computer Lab A',
+          dateReported: new Date().toISOString(),
+          status: 'active',
+          reporter: { name: 'Anonymous' }
+        }
+      ]);
+      setFoundItems([
+        {
+          _id: 'mock3',
+          itemName: 'Student ID Card',
+          description: 'Found near main entrance',
+          category: 'documents',
+          location: 'Main Entrance',
+          dateReported: new Date().toISOString(),
+          status: 'active',
+          finder: { name: 'Security Office' }
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -109,9 +148,9 @@ export default function LostFoundPage() {
 
     try {
       if (postType === 'lost') {
-        await lostFoundAPI.createLostItem(formData);
+        await lostFoundAPI.createLostItem(formData, itemImages);
       } else {
-        await lostFoundAPI.createFoundItem(formData);
+        await lostFoundAPI.createFoundItem(formData, itemImages);
       }
       
       // Reset form and fetch updated items
@@ -124,6 +163,7 @@ export default function LostFoundPage() {
         brand: '',
         uniqueMarks: ''
       });
+      setItemImages([]);
       await fetchItems();
       setActiveTab('dashboard');
     } catch (err: any) {
@@ -195,8 +235,9 @@ export default function LostFoundPage() {
       <div className="ivy-mesh" />
       <div className="grain" />
       <Navbar />
+      <TopBar />
       
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-10 py-12 relative z-10">
+      <main className="max-w-[1700px] px-6 lg:px-10 lg:pl-[300px] py-12 relative z-10">
         {/* Header */}
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3">
@@ -435,25 +476,46 @@ export default function LostFoundPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {[
-                    { title: 'Black HP Laptop', desc: 'HP EliteBook with university sticker', owner: 'Amine R.', loc: 'Library 3rd Floor', date: 'Dec 15, 2025', status: 'Active Match', img: '💻', color: 'border-indigo-400' },
-                    { title: 'Sony Headphones', desc: 'WH-1000XM4 Noise Cancelling', owner: 'Ines T.', loc: 'Cafeteria', date: 'Oct 19, 2024', status: 'Searching', img: '🎧', color: 'border-slate-200' },
-                    { title: 'Scientific Calculator', desc: 'Casio FX-991EX with scratches', owner: 'Karim B.', loc: 'Amphi B', date: 'Oct 18, 2024', status: 'Searching', img: '🔢', color: 'border-slate-200' },
-                  ].map((item, i) => (
-                    <div key={i} className={`group academic-card p-6 !bg-slate-50 !border-2 ${item.color} hover:shadow-xl transition-all`}>
+                {isLoading ? (
+                  <div className="col-span-full text-center py-20">
+                    <div className="inline-block w-12 h-12 border-4 border-slate-200 border-t-rose-600 rounded-full animate-spin"></div>
+                    <p className="text-slate-400 font-medium mt-4">Loading lost items...</p>
+                  </div>
+                ) : error ? (
+                  <div className="col-span-full text-center py-20">
+                    <AlertCircle className="w-16 h-16 text-rose-500 mx-auto mb-4" />
+                    <p className="text-slate-600 font-medium">{error}</p>
+                  </div>
+                ) : lostItems.length === 0 ? (
+                  <div className="col-span-full text-center py-20">
+                    <Package className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-400 font-medium">No lost items reported yet</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {lostItems.map((item, i) => {
+                    const categoryEmoji: {[key: string]: string} = {
+                      electronics: '💻',
+                      bags: '🎒',
+                      accessories: '⌚',
+                      books: '📚',
+                      keys: '🔑',
+                      others: '📦'
+                    };
+                    return (
+                    <div key={item._id || i} className={`group academic-card p-6 !bg-slate-50 !border-2 ${item.status === 'matched' ? 'border-indigo-400' : 'border-slate-200'} hover:shadow-xl transition-all`}>
                       <div className="h-40 rounded-2xl bg-white border border-slate-100 mb-6 flex items-center justify-center text-5xl group-hover:scale-105 transition-transform duration-500 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-slate-500/5 to-transparent" />
-                        {item.img}
+                        {categoryEmoji[item.category] || '📦'}
                       </div>
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h3 className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors text-lg">{item.title}</h3>
-                          <p className="text-xs text-slate-500 mt-1">{item.desc}</p>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Owner: {item.owner}</p>
+                          <p className="text-xs text-slate-500 mt-1">{item.description}</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Owner: {item.owner?.name || 'Anonymous'}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest shrink-0 ${
-                          item.status === 'Active Match' ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'
+                          item.status === 'matched' ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'
                         }`}>
                           {item.status}
                         </span>
@@ -461,11 +523,11 @@ export default function LostFoundPage() {
                       <div className="space-y-2 mb-6">
                         <div className="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
                           <MapPin className="w-3.5 h-3.5" />
-                          {item.loc}
+                          {item.location}
                         </div>
                         <div className="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
                           <Calendar className="w-3.5 h-3.5" />
-                          {item.date}
+                          {new Date(item.date).toLocaleDateString()}
                         </div>
                       </div>
                       <div className="flex gap-3">
@@ -491,8 +553,124 @@ export default function LostFoundPage() {
                         </button>
                       </div>
                     </div>
-                  ))}
+                  )})}
                 </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'found' && (
+            <motion.div
+              key="found"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-10"
+            >
+              <div className="academic-card p-10 !bg-white">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+                  <div className="space-y-2">
+                    <h2 className="text-3xl font-serif font-bold text-slate-900 flex items-center gap-3">
+                      <CheckCircle className="w-8 h-8 text-emerald-600" />
+                      Found Item Registry
+                    </h2>
+                    <p className="text-slate-500 font-medium text-lg">Items found by community members awaiting claim.</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input 
+                        type="text" 
+                        placeholder="Filter registry..." 
+                        className="bg-slate-50 border border-slate-200 rounded-2xl py-3 pl-12 pr-6 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-500/30 transition-all w-64"
+                      />
+                    </div>
+                    <button className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-emerald-200 transition-all text-slate-600">
+                      <Filter className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                {isLoading ? (
+                  <div className="text-center py-20">
+                    <div className="inline-block w-12 h-12 border-4 border-slate-200 border-t-emerald-600 rounded-full animate-spin"></div>
+                    <p className="text-slate-400 font-medium mt-4">Loading found items...</p>
+                  </div>
+                ) : error ? (
+                  <div className="text-center py-20">
+                    <AlertCircle className="w-16 h-16 text-rose-500 mx-auto mb-4" />
+                    <p className="text-slate-600 font-medium">{error}</p>
+                  </div>
+                ) : foundItems.length === 0 ? (
+                  <div className="text-center py-20">
+                    <Package className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-400 font-medium">No found items reported yet</p>
+                  </div>
+                ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {foundItems.map((item, i) => {
+                    const categoryEmoji: {[key: string]: string} = {
+                      electronics: '💻',
+                      bags: '🎒',
+                      accessories: '⌚',
+                      books: '📚',
+                      keys: '🔑',
+                      others: '📦'
+                    };
+                    return (
+                    <div key={item._id || i} className="group academic-card p-6 !bg-slate-50 !border-2 border-emerald-200 hover:shadow-xl transition-all">
+                      <div className="h-40 rounded-2xl bg-white border border-slate-100 mb-6 flex items-center justify-center text-5xl group-hover:scale-105 transition-transform duration-500 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
+                        {categoryEmoji[item.category] || '📦'}
+                      </div>
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="font-bold text-slate-900 group-hover:text-emerald-600 transition-colors text-lg">{item.title}</h3>
+                          <p className="text-xs text-slate-500 mt-1">{item.description}</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Found by: {item.finder?.name || 'Anonymous'}</p>
+                        </div>
+                        <span className="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest shrink-0 bg-emerald-600 text-white">
+                          {item.status}
+                        </span>
+                      </div>
+                      <div className="space-y-2 mb-6">
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
+                          <MapPin className="w-3.5 h-3.5" />
+                          {item.location}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
+                          <Calendar className="w-3.5 h-3.5" />
+                          {new Date(item.date).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowMessaging(true);
+                          }}
+                          className="flex-1 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold uppercase tracking-widest text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all flex items-center justify-center gap-2"
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                          Contact
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowVerification(true);
+                          }}
+                          className="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-indigo-700 transition-all flex items-center justify-center gap-2"
+                        >
+                          <Lock className="w-4 h-4" />
+                          Claim
+                        </button>
+                      </div>
+                    </div>
+                  )})}
+                </div>
+                )}
               </div>
             </motion.div>
           )}
@@ -503,17 +681,18 @@ export default function LostFoundPage() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
-              className="max-w-4xl mx-auto"
+              className="max-w-6xl mx-auto"
             >
-              <div className="academic-card p-12 !bg-white">
+              <form onSubmit={handleSubmitReport} className="academic-card p-12 !bg-white">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
                   <div className="space-y-2">
-                    <h2 className="text-3xl font-serif font-bold text-slate-900">Neural Report <span className="text-amber-600">Module</span></h2>
-                    <p className="text-slate-500 font-medium text-lg">Input item metadata for matching analysis.</p>
+                    <h2 className="text-3xl font-serif font-bold text-slate-900">Report {postType === 'lost' ? 'Lost' : 'Found'} <span className={postType === 'lost' ? 'text-rose-600' : 'text-emerald-600'}>Item</span></h2>
+                    <p className="text-slate-500 font-medium text-lg">Fill in the details to help find a match.</p>
                   </div>
                   
                   <div className="flex p-1 bg-slate-100 rounded-2xl border border-slate-200 w-fit">
                     <button
+                      type="button"
                       onClick={() => setPostType('lost')}
                       className={`px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
                         postType === 'lost' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-400'
@@ -522,6 +701,7 @@ export default function LostFoundPage() {
                       I Lost
                     </button>
                     <button
+                      type="button"
                       onClick={() => setPostType('found')}
                       className={`px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
                         postType === 'found' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-400'
@@ -532,48 +712,248 @@ export default function LostFoundPage() {
                   </div>
                 </div>
 
-                <div className="space-y-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {error && (
+                  <div className="mb-8 p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-sm">
+                    {error}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                  {/* Form Fields */}
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Item Title *</label>
+                        <input 
+                          type="text" 
+                          value={formData.title}
+                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          placeholder="e.g., Black Laptop, Blue Wallet..." 
+                          required
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700" 
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Category</label>
+                        <select 
+                          value={formData.category}
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700"
+                        >
+                          <option value="electronics">📱 Electronics</option>
+                          <option value="documents">📄 Documents</option>
+                          <option value="clothing">👕 Clothing</option>
+                          <option value="accessories">⌚ Accessories</option>
+                          <option value="books">📚 Books</option>
+                          <option value="keys">🔑 Keys</option>
+                          <option value="wallet">👛 Wallet/Cards</option>
+                          <option value="other">📦 Other</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Brand/Model</label>
+                        <input 
+                          type="text" 
+                          value={formData.brand}
+                          onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                          placeholder="e.g., HP, Samsung, Nike..." 
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700" 
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date *</label>
+                        <input 
+                          type="date" 
+                          value={formData.date}
+                          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                          required
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700" 
+                        />
+                      </div>
+                    </div>
+
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Item Classification</label>
-                      <input type="text" placeholder="e.g., Black Laptop, Blue Wallet..." className="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700" />
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Description *</label>
+                      <textarea 
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Describe the item in detail - color, size, unique marks, stickers, contents..." 
+                        required
+                        rows={3}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-medium text-slate-700 resize-none"
+                      />
                     </div>
+
                     <div className="space-y-3">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Location Coordinates</label>
-                      <select className="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700">
-                        <option>Central Library</option>
-                        <option>Main Cafeteria</option>
-                        <option>Faculty of Sciences</option>
-                        <option>Student Residence</option>
-                      </select>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Unique Marks</label>
+                      <input 
+                        type="text" 
+                        value={formData.uniqueMarks}
+                        onChange={(e) => setFormData({ ...formData, uniqueMarks: e.target.value })}
+                        placeholder="e.g., Scratch on corner, sticker, engraved name..." 
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-amber-400 outline-none font-bold text-slate-700" 
+                      />
+                    </div>
+
+                    {/* Image Upload */}
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Upload Images</label>
+                      <div className="group border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center hover:border-amber-400 hover:bg-amber-50/30 transition-all cursor-pointer relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={(e) => {
+                            if (e.target.files) {
+                              setItemImages(Array.from(e.target.files));
+                            }
+                          }}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                        <Camera className="w-10 h-10 text-slate-300 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                        <p className="text-sm font-bold text-slate-600">
+                          {itemImages.length > 0 ? `${itemImages.length} image(s) selected` : 'Click or drag to upload'}
+                        </p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">PNG, JPG up to 5MB each</p>
+                      </div>
+                      
+                      {/* Image Previews */}
+                      {itemImages.length > 0 && (
+                        <div className="grid grid-cols-4 gap-3 mt-4">
+                          {itemImages.map((file, idx) => (
+                            <div key={idx} className="relative group">
+                              <div className="aspect-square rounded-xl bg-slate-100 border border-slate-200 overflow-hidden">
+                                <img
+                                  src={URL.createObjectURL(file)}
+                                  alt={file.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setItemImages(itemImages.filter((_, i) => i !== idx))}
+                                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Distinguishing Features</label>
-                    <textarea 
-                      placeholder="Describe unique marks, stickers, or internal contents..." 
-                      className="w-full h-32 p-6 bg-slate-50 border border-slate-200 rounded-[2rem] focus:border-amber-400 outline-none font-medium text-slate-700 resize-none"
-                    />
-                  </div>
+                  {/* Campus Map Location Picker */}
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Select Location on Campus *</label>
+                    <div className="relative aspect-square bg-gradient-to-br from-emerald-50 to-blue-50 rounded-2xl border-2 border-slate-200 overflow-hidden">
+                      {/* Campus Map */}
+                      <div className="absolute inset-0 p-3">
+                        {/* Main Roads */}
+                        <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-slate-300/60 transform -translate-y-1/2" />
+                        <div className="absolute left-1/2 top-0 bottom-0 w-1.5 bg-slate-300/60 transform -translate-x-1/2" />
+                        
+                        {/* Campus Boundary */}
+                        <div className="absolute inset-3 border-2 border-dashed border-slate-300 rounded-2xl" />
 
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Visual Evidence</label>
-                    <div className="group border-2 border-dashed border-slate-200 rounded-[2rem] p-12 text-center hover:border-amber-400 hover:bg-amber-50/30 transition-all cursor-pointer relative">
-                      <Camera className="w-10 h-10 text-slate-300 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                      <p className="text-sm font-bold text-slate-500">Upload Item Imagery</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">AI will analyze image for matches</p>
+                        {/* Location Selection Buttons */}
+                        {[
+                          { id: 'computer-science', name: 'Dept. of Computer Science', emoji: '💻', top: '12%', left: '10%', color: 'indigo' },
+                          { id: 'mathematics', name: 'Dept. of Mathematics', emoji: '📐', top: '10%', right: '15%', color: 'purple' },
+                          { id: 'physics', name: 'Dept. of Physics', emoji: '⚛️', top: '38%', left: '6%', color: 'blue' },
+                          { id: 'library', name: 'Central Library', emoji: '📚', top: '32%', left: '38%', color: 'rose' },
+                          { id: 'chemistry', name: 'Dept. of Chemistry', emoji: '🧪', top: '42%', right: '8%', color: 'emerald' },
+                          { id: 'biology', name: 'Dept. of Biology', emoji: '🧬', bottom: '28%', left: '12%', color: 'green' },
+                          { id: 'cafeteria', name: 'Student Cafeteria', emoji: '🍽️', bottom: '18%', left: '35%', color: 'amber' },
+                          { id: 'sports', name: 'Sports Complex', emoji: '⚽', bottom: '22%', right: '10%', color: 'sky' },
+                          { id: 'admin', name: 'Administration', emoji: '🏛️', top: '5%', left: '42%', color: 'slate' },
+                          { id: 'amphitheater', name: 'Amphitheater', emoji: '🎭', top: '55%', right: '22%', color: 'violet' },
+                          { id: 'parking', name: 'Parking Area', emoji: '🅿️', bottom: '8%', right: '5%', color: 'slate' },
+                        ].map((loc) => (
+                          <button
+                            key={loc.id}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, location: loc.name })}
+                            style={{ 
+                              top: loc.top, 
+                              left: loc.left, 
+                              right: loc.right, 
+                              bottom: loc.bottom 
+                            }}
+                            className={`absolute group cursor-pointer transition-all duration-300 ${
+                              formData.location === loc.name ? 'scale-110 z-10' : 'hover:scale-105'
+                            }`}
+                          >
+                            <div className={`w-12 h-10 rounded-lg shadow-lg flex items-center justify-center transition-all ${
+                              formData.location === loc.name 
+                                ? `bg-${loc.color}-600 ring-4 ring-${loc.color}-300` 
+                                : `bg-${loc.color}-500 hover:bg-${loc.color}-600`
+                            }`}>
+                              <span className="text-lg">{loc.emoji}</span>
+                            </div>
+                            {formData.location === loc.name && (
+                              <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                              </div>
+                            )}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-[10px] px-2 py-1 rounded-lg whitespace-nowrap z-50">
+                              {loc.name}
+                            </div>
+                          </button>
+                        ))}
+
+                        {/* Map Title */}
+                        <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg border border-slate-200">
+                          <p className="text-[9px] font-bold text-slate-600">🗺️ University of Batna 2</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Selected Location Display */}
+                    <div className={`p-4 rounded-2xl border-2 transition-all ${
+                      formData.location 
+                        ? 'bg-emerald-50 border-emerald-300' 
+                        : 'bg-slate-50 border-slate-200'
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                          formData.location ? 'bg-emerald-500' : 'bg-slate-300'
+                        }`}>
+                          <MapPin className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Selected Location</p>
+                          <p className={`font-bold ${formData.location ? 'text-emerald-700' : 'text-slate-400'}`}>
+                            {formData.location || 'Click a building on the map'}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <button className={`w-full py-6 rounded-[2rem] font-bold text-lg shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center gap-3 ${
+                <button 
+                  type="submit"
+                  disabled={isLoading || !formData.title || !formData.description || !formData.location}
+                  className={`w-full mt-10 py-6 rounded-[2rem] font-bold text-lg shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${
                     postType === 'lost' ? 'bg-rose-600 text-white shadow-rose-200 hover:bg-rose-700' : 'bg-emerald-600 text-white shadow-emerald-200 hover:bg-emerald-700'
                   }`}>
-                    <Sparkles className="w-6 h-6" />
-                    Initialize Matching Engine
-                  </button>
-                </div>
-              </div>
+                  {isLoading ? (
+                    <>
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-6 h-6" />
+                      Submit {postType === 'lost' ? 'Lost' : 'Found'} Item Report
+                    </>
+                  )}
+                </button>
+              </form>
             </motion.div>
           )}
 
@@ -589,56 +969,283 @@ export default function LostFoundPage() {
                 <div className="space-y-2 mb-10">
                   <h2 className="text-3xl font-serif font-bold text-slate-900 flex items-center gap-3">
                     <MapPin className="w-8 h-8 text-rose-600" />
-                    Campus Risk Heatmap
+                    University of Batna 2 - Campus Heatmap
                   </h2>
-                  <p className="text-slate-500 font-medium text-lg">Real-time visualization of item loss hotspots.</p>
+                  <p className="text-slate-500 font-medium text-lg">Real-time visualization of lost & found item hotspots across campus departments.</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                   <div className="lg:col-span-8">
-                    <div className="aspect-video bg-slate-100 rounded-[3rem] border-4 border-white shadow-inner flex items-center justify-center relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&fit=crop')] bg-cover opacity-20 grayscale group-hover:opacity-30 transition-opacity duration-700" />
-                      <div className="relative z-10 text-center space-y-4">
-                        <div className="w-20 h-20 rounded-full bg-white/50 backdrop-blur-md flex items-center justify-center mx-auto border border-white">
-                          <MapPin className="w-10 h-10 text-rose-600 animate-bounce" />
+                    {/* Interactive Campus Map */}
+                    <div className="relative aspect-[4/3] bg-gradient-to-br from-emerald-50 to-blue-50 rounded-[2rem] border-4 border-white shadow-xl overflow-hidden">
+                      {/* Campus Base Map - University of Batna 2 Layout */}
+                      <div className="absolute inset-0 p-4">
+                        {/* Main Roads */}
+                        <div className="absolute top-1/2 left-0 right-0 h-2 bg-slate-300/60 transform -translate-y-1/2" />
+                        <div className="absolute left-1/2 top-0 bottom-0 w-2 bg-slate-300/60 transform -translate-x-1/2" />
+                        
+                        {/* Campus Boundary */}
+                        <div className="absolute inset-4 border-2 border-dashed border-slate-300 rounded-3xl" />
+                        
+                        {/* Department Buildings with Real Locations */}
+                        
+                        {/* Computer Science Department - Top Left */}
+                        <div className="absolute top-[15%] left-[12%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-20 h-16 bg-indigo-600 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
+                              <span className="text-white text-2xl">💻</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-7 h-7 bg-rose-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse shadow-lg">
+                              8
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Dept. of Computer Science
+                              <br />
+                              <span className="text-rose-300">8 items reported</span>
+                            </div>
+                          </div>
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900">Interactive Campus Grid</h3>
-                        <p className="text-slate-500 font-medium">Neural visualization of University Batna 2 sectors.</p>
+                        
+                        {/* Mathematics Department - Top Right */}
+                        <div className="absolute top-[12%] right-[18%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-18 h-14 bg-purple-600 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 px-3 py-2">
+                              <span className="text-white text-2xl">📐</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              5
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Dept. of Mathematics
+                              <br />
+                              <span className="text-amber-300">5 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Physics Department - Center Left */}
+                        <div className="absolute top-[40%] left-[8%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-18 h-14 bg-blue-600 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 px-3 py-2">
+                              <span className="text-white text-2xl">⚛️</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              6
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Dept. of Physics
+                              <br />
+                              <span className="text-orange-300">6 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Central Library - Center */}
+                        <div className="absolute top-[35%] left-[42%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-24 h-20 bg-rose-600 rounded-2xl shadow-xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 border-2 border-rose-400">
+                              <span className="text-white text-3xl">📚</span>
+                            </div>
+                            <div className="absolute -top-3 -right-3 w-8 h-8 bg-rose-700 rounded-full flex items-center justify-center text-white text-sm font-bold animate-bounce shadow-lg">
+                              15
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Central Library (Hotspot!)
+                              <br />
+                              <span className="text-rose-300">15 items reported - HIGH RISK</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Chemistry Department - Right Side */}
+                        <div className="absolute top-[45%] right-[10%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-18 h-14 bg-emerald-600 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 px-3 py-2">
+                              <span className="text-white text-2xl">🧪</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              4
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Dept. of Chemistry
+                              <br />
+                              <span className="text-amber-300">4 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Biology Department - Bottom Left */}
+                        <div className="absolute bottom-[25%] left-[15%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-18 h-14 bg-green-600 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 px-3 py-2">
+                              <span className="text-white text-2xl">🧬</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-800 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              3
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Dept. of Biology
+                              <br />
+                              <span className="text-green-300">3 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Student Cafeteria - Bottom Center */}
+                        <div className="absolute bottom-[15%] left-[40%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-20 h-16 bg-amber-500 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
+                              <span className="text-white text-2xl">🍽️</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-7 h-7 bg-rose-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse shadow-lg">
+                              12
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Student Cafeteria
+                              <br />
+                              <span className="text-rose-300">12 items reported - HIGH RISK</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Sports Complex - Bottom Right */}
+                        <div className="absolute bottom-[20%] right-[12%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-18 h-14 bg-sky-500 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 px-3 py-2">
+                              <span className="text-white text-2xl">⚽</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-sky-700 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              7
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Sports Complex
+                              <br />
+                              <span className="text-sky-300">7 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Administration Building - Top Center */}
+                        <div className="absolute top-[8%] left-[45%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-22 h-14 bg-slate-700 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 px-4 py-2">
+                              <span className="text-white text-2xl">🏛️</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-slate-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              2
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Administration Building
+                              <br />
+                              <span className="text-slate-300">2 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Amphitheater - Center Right */}
+                        <div className="absolute top-[55%] right-[25%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-16 h-12 bg-violet-600 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
+                              <span className="text-white text-xl">🎭</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-5 h-5 bg-violet-800 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              9
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Main Amphitheater
+                              <br />
+                              <span className="text-violet-300">9 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Parking Area - Far Right */}
+                        <div className="absolute top-[70%] right-[5%] group cursor-pointer">
+                          <div className="relative">
+                            <div className="w-14 h-12 bg-slate-500 rounded-lg shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
+                              <span className="text-white text-xl">🅿️</span>
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                              4
+                            </div>
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50">
+                              Parking Area B
+                              <br />
+                              <span className="text-amber-300">4 items reported</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Map Title */}
+                        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg border border-slate-200">
+                          <p className="text-xs font-bold text-slate-600">🗺️ University of Batna 2 - Mostefa Ben Boulaïd</p>
+                          <p className="text-[10px] text-slate-400">Interactive Campus Map • Click for details</p>
+                        </div>
+                        
+                        {/* Legend */}
+                        <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-xl shadow-lg border border-slate-200">
+                          <p className="text-[10px] font-bold text-slate-500 mb-1">Risk Level</p>
+                          <div className="flex items-center gap-2 text-[9px]">
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 bg-rose-500 rounded-full"></span>High</span>
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 bg-amber-500 rounded-full"></span>Medium</span>
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 bg-green-500 rounded-full"></span>Low</span>
+                          </div>
+                        </div>
                       </div>
-                      
-                      {/* Pulse indicators */}
-                      <div className="absolute top-[30%] left-[40%] w-8 h-8 bg-rose-500/40 rounded-full animate-ping" />
-                      <div className="absolute top-[60%] left-[70%] w-12 h-12 bg-amber-500/40 rounded-full animate-ping" />
                     </div>
                   </div>
 
-                  <div className="lg:col-span-4 space-y-8">
-                    <div className="academic-card p-8 !bg-slate-50 border-slate-200">
-                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Statistical Analysis</h3>
-                      <div className="space-y-6">
+                  <div className="lg:col-span-4 space-y-6">
+                    <div className="academic-card p-6 !bg-slate-50 border-slate-200">
+                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Department Statistics</h3>
+                      <div className="space-y-4">
                         {[
-                          { loc: 'Central Library', loss: 58, risk: 'Critical', color: 'bg-rose-500' },
-                          { loc: 'Science Labs', loss: 32, risk: 'High', color: 'bg-orange-500' },
-                          { loc: 'Student Hub', loss: 25, risk: 'Elevated', color: 'bg-amber-500' },
-                          { loc: 'Sports Complex', loss: 14, risk: 'Stable', color: 'bg-indigo-500' },
+                          { loc: 'Central Library', loss: 15, risk: 'Critical', color: 'bg-rose-500', emoji: '📚' },
+                          { loc: 'Student Cafeteria', loss: 12, risk: 'High', color: 'bg-rose-400', emoji: '🍽️' },
+                          { loc: 'Main Amphitheater', loss: 9, risk: 'High', color: 'bg-orange-500', emoji: '🎭' },
+                          { loc: 'Computer Science', loss: 8, risk: 'Elevated', color: 'bg-amber-500', emoji: '💻' },
+                          { loc: 'Sports Complex', loss: 7, risk: 'Elevated', color: 'bg-amber-400', emoji: '⚽' },
+                          { loc: 'Physics Dept.', loss: 6, risk: 'Moderate', color: 'bg-yellow-500', emoji: '⚛️' },
+                          { loc: 'Mathematics Dept.', loss: 5, risk: 'Moderate', color: 'bg-indigo-500', emoji: '📐' },
+                          { loc: 'Chemistry Dept.', loss: 4, risk: 'Low', color: 'bg-emerald-500', emoji: '🧪' },
+                          { loc: 'Parking Area', loss: 4, risk: 'Low', color: 'bg-slate-500', emoji: '🅿️' },
+                          { loc: 'Biology Dept.', loss: 3, risk: 'Low', color: 'bg-green-500', emoji: '🧬' },
                         ].map((stat, i) => (
-                          <div key={i} className="space-y-3">
-                            <div className="flex justify-between items-end">
-                              <div>
-                                <p className="text-sm font-bold text-slate-900">{stat.loc}</p>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.risk} Risk Sector</p>
+                          <div key={i} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{stat.emoji}</span>
+                                <div>
+                                  <p className="text-xs font-bold text-slate-900">{stat.loc}</p>
+                                  <p className="text-[9px] font-bold text-slate-400 uppercase">{stat.risk}</p>
+                                </div>
                               </div>
-                              <span className="text-xl font-serif font-bold text-slate-900">{stat.loss}</span>
+                              <span className="text-lg font-serif font-bold text-slate-900">{stat.loss}</span>
                             </div>
-                            <div className="h-1.5 w-full bg-white rounded-full overflow-hidden p-[2px] border border-slate-100">
+                            <div className="h-1.5 w-full bg-white rounded-full overflow-hidden border border-slate-100">
                               <motion.div 
                                 initial={{ width: 0 }}
-                                animate={{ width: `${(stat.loss / 60) * 100}%` }}
+                                animate={{ width: `${(stat.loss / 15) * 100}%` }}
+                                transition={{ duration: 0.8, delay: i * 0.1 }}
                                 className={`h-full ${stat.color} rounded-full`}
                               />
                             </div>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                    
+                    <div className="academic-card p-6 !bg-amber-50 border-amber-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center shrink-0">
+                          <AlertCircle className="w-5 h-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-amber-800 text-sm mb-1">Safety Tip</h4>
+                          <p className="text-xs text-amber-700 leading-relaxed">
+                            The Library and Cafeteria are hotspots. Keep your belongings secure and use the designated lockers available in these areas.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

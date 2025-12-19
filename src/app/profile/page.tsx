@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '../components/Navbar';
+import TopBar from '../components/TopBar';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -44,8 +45,9 @@ export default function ProfilePage() {
       <div className="ivy-mesh" />
       <div className="grain" />
       <Navbar />
+      <TopBar />
       
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-10 py-12 relative z-10">
+      <main className="max-w-[1700px] px-6 lg:px-10 lg:pl-[300px] py-12 relative z-10">
         <header className="mb-12">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
