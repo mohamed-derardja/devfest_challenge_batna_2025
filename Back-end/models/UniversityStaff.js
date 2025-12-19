@@ -8,4 +8,5 @@ const universityStaffSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = User.discriminator('UniversityStaff', universityStaffSchema, 'staff');
+// Use 'UniversityStaff' as discriminator value for userType field
+module.exports = User.discriminator('UniversityStaff', universityStaffSchema, 'UniversityStaff');

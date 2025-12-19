@@ -46,7 +46,7 @@ export default function LoginPage() {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('userRole', selectedRole || 'student');
           localStorage.setItem('userEmail', email);
-          localStorage.setItem('userName', response.user?.name || name);
+          localStorage.setItem('userName', response.data?.name || name);
           router.push('/');
         }
       } else {
@@ -55,9 +55,9 @@ export default function LoginPage() {
         
         if (response.token) {
           localStorage.setItem('authToken', response.token);
-          localStorage.setItem('userRole', response.user?.role || selectedRole || 'student');
+          localStorage.setItem('userRole', response.data?.role || selectedRole || 'student');
           localStorage.setItem('userEmail', email);
-          localStorage.setItem('userName', response.user?.name || email.split('@')[0]);
+          localStorage.setItem('userName', response.data?.name || email.split('@')[0]);
           router.push('/');
         }
       }

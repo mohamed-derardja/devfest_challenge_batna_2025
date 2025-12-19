@@ -19,9 +19,14 @@ const UserSchema = new mongoose.Schema(
             default: 'student',
             required: true,
             index: true
+        },
+        userType: {
+            type: String,
+            enum: ['User', 'Student', 'Teacher', 'UniversityStaff'],
+            default: 'User'
         }
     },
-    { timestamps: true, discriminatorKey: 'role' }
+    { timestamps: true, discriminatorKey: 'userType' }
 );
 
 UserSchema.pre('save', async function () {

@@ -9,4 +9,5 @@ const teacherSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = User.discriminator('Teacher', teacherSchema, 'teacher');
+// Use 'Teacher' as discriminator value for userType field
+module.exports = User.discriminator('Teacher', teacherSchema, 'Teacher');

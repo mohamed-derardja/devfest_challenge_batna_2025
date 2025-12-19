@@ -13,7 +13,7 @@ beforeAll(async () => {
     process.env.MONGODB_URI = mongoServer.getUri();
     await connectDB();
     app = require('../server');
-});
+}, 30000);
 
 afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
@@ -30,8 +30,8 @@ describe('Student CRUD operations', () => {
     describe('GET /api/students', () => {
         test('returns all students', async () => {
             await Student.create([
-                { name: 'Alice', email: 'alice@test.com', year: 1, department: 'CS' },
-                { name: 'Bob', email: 'bob@test.com', year: 2, department: 'Math' }
+                { name: 'Alice', email: 'alice@test.com', year: 1, department: 'CS', password: 'password123' },
+                { name: 'Bob', email: 'bob@test.com', year: 2, department: 'Math', password: 'password123' }
             ]);
 
             const res = await request(app).get('/api/students');
@@ -56,7 +56,8 @@ describe('Student CRUD operations', () => {
                 name: 'Charlie',
                 email: 'charlie@test.com',
                 year: 3,
-                department: 'Physics'
+                department: 'Physics',
+                password: 'password123'
             });
 
             const res = await request(app).get(`/api/students/${student._id}`);
@@ -88,7 +89,8 @@ describe('Student CRUD operations', () => {
                 name: 'Dave',
                 email: 'dave@test.com',
                 year: 1,
-                department: 'Engineering'
+                department: 'Engineering',
+                password: 'password123'
             };
 
             const res = await request(app)
@@ -145,7 +147,8 @@ describe('Student CRUD operations', () => {
                 name: 'Ivan',
                 email: 'ivan@test.com',
                 year: 1,
-                department: 'CS'
+                department: 'CS',
+                password: 'password123'
             });
 
             const res = await request(app)
@@ -173,7 +176,8 @@ describe('Student CRUD operations', () => {
                 name: 'Jane',
                 email: 'jane@test.com',
                 year: 2,
-                department: 'Math'
+                department: 'Math',
+                password: 'password123'
             });
 
             const res = await request(app)
@@ -191,7 +195,8 @@ describe('Student CRUD operations', () => {
                 name: 'Karen',
                 email: 'karen@test.com',
                 year: 4,
-                department: 'Physics'
+                department: 'Physics',
+                password: 'password123'
             });
 
             const res = await request(app).delete(`/api/students/${student._id}`);

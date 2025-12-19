@@ -21,21 +21,41 @@ const storage = multer.diskStorage({
     },
 });
 
-// File filter (optional: only allow certain file types)
+// Allowed file types (documents and images)
+const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.txt', '.jpg', '.jpeg', '.png', '.gif', '.webp'];
+const ALLOWED_MIMETYPES = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain',
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp'
+];
+
+// File filter
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['.pdf', '.doc', '.docx', '.txt'];
     const ext = path.extname(file.originalname).toLowerCase();
-    if (allowedTypes.includes(ext)) {
+    const mimetype = file.mimetype;
+
+    if (ALLOWED_EXTENSIONS.includes(ext) && ALLOWED_MIMETYPES.includes(mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Only PDF, DOC, DOCX, and TXT files are allowed.'));
+        const error = new Error(`File type not allowed. Allowed types: ${ALLOWED_EXTENSIONS.join(', ')}`);
+        error.code = 'LIMIT_FILE_TYPE';
+        cb(error, false);
     }
 };
 
+// Configure multer with limits
 const upload = multer({
     storage,
     fileFilter,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+    limits: {
+        fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024, // Default 10MB
+        files: 1 // Only allow one file at a time
+    },
 });
 
 module.exports = upload;

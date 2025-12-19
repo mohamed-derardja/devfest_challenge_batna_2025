@@ -17,7 +17,7 @@ beforeAll(async () => {
 
     await connectDB();
     app = require('../server');
-});
+}, 30000);
 
 afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
@@ -37,7 +37,8 @@ describe('Student enrollment', () => {
             name: 'Jane Doe',
             email: 'jane@example.com',
             year: 1,
-            department: 'CS'
+            department: 'CS',
+            password: 'password123'
         });
 
         const res = await request(app)
@@ -58,7 +59,8 @@ describe('Student enrollment', () => {
             name: 'John Smith',
             email: 'john@example.com',
             year: 2,
-            department: 'CS'
+            department: 'CS',
+            password: 'password123'
         });
 
         await request(app)
@@ -79,7 +81,8 @@ describe('Student enrollment', () => {
             name: 'Alice',
             email: 'alice@example.com',
             year: 3,
-            department: 'CS'
+            department: 'CS',
+            password: 'password123'
         });
 
         const res = await request(app)
@@ -101,7 +104,8 @@ describe('Student enrollment', () => {
             name: 'Bob',
             email: 'bob@example.com',
             year: 4,
-            department: 'CS'
+            department: 'CS',
+            password: 'password123'
         });
 
         await request(app).post(`/api/students/${student._id}/enroll`).send({ courseId: courses[0]._id.toString() });

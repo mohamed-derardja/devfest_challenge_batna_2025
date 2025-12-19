@@ -15,7 +15,7 @@ beforeAll(async () => {
     process.env.MONGODB_URI = mongoServer.getUri();
     await connectDB();
     app = require('../server');
-});
+}, 30000);
 
 afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
@@ -123,7 +123,7 @@ describe('Auth operations', () => {
         test('rejects non-existent user', async () => {
             const res = await request(app)
                 .post('/api/auth/login')
-                .send({ email: 'nobody@example.com', password: 'pass' });
+                .send({ email: 'nobody@example.com', password: 'password123' });
 
             expect(res.status).toBe(401);
         });
@@ -167,7 +167,8 @@ describe('Auth operations', () => {
                 name: 'Admin',
                 email: 'admin@university.dz',
                 password: 'admin123',
-                position: 'Registrar'
+                position: 'Registrar',
+                role: 'staff'
             });
 
             const staffLogin = await request(app)
@@ -208,7 +209,7 @@ describe('Auth operations', () => {
                 .send({
                     name: 'Prof. X',
                     email: 'x@university.dz',
-                    password: 'teach',
+                    password: 'teacher123',
                     department: 'Math'
                 });
 

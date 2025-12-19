@@ -1,18 +1,7 @@
 const mongoose = require('mongoose');
+const User = require('./User');
 
 const studentSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, 'Student name is required'],
-        trim: true
-    },
-    email: {
-        type: String,
-        required: [true, 'Email is required'],
-        unique: true,
-        lowercase: true,
-        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
-    },
     year: {
         type: Number,
         required: [true, 'Year is required'],
@@ -49,4 +38,4 @@ const studentSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Student', studentSchema);
+module.exports = User.discriminator('Student', studentSchema, 'Student');
