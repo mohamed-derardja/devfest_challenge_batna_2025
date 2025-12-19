@@ -1,0 +1,406 @@
+{
+    "info": {
+        "name": "DevFest Challenge Batna 2025 API",
+        "_postman_id": "devfest-batna-2025",
+        "description": "Complete API collection for the student management system",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000",
+            "type": "string"
+        },
+        {
+            "key": "studentId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "courseId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "topicId",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Students",
+            "item": [
+                {
+                    "name": "Get All Students",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Student by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/{{studentId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "{{studentId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Student",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    const response = pm.response.json();",
+                                    "    pm.collectionVariables.set('studentId', response.data._id);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"year\": 1,\n  \"department\": \"Computer Science\",\n  \"averageGrade\": 15\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Student",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"year\": 2,\n  \"averageGrade\": 16\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/{{studentId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "{{studentId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Student",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/{{studentId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "{{studentId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Enroll in Course",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"courseId\": \"{{courseId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/{{studentId}}/enroll",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "{{studentId}}",
+                                "enroll"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Courses",
+            "item": [
+                {
+                    "name": "Get All Courses",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Course by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses",
+                                "{{courseId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Course",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    const response = pm.response.json();",
+                                    "    pm.collectionVariables.set('courseId', response.data._id);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"courseName\": \"Data Structures and Algorithms\",\n  \"code\": \"CS101\",\n  \"credits\": 4,\n  \"semester\": \"Fall\",\n  \"year\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Course",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"credits\": 5,\n  \"semester\": \"Spring\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses",
+                                "{{courseId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Course",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses",
+                                "{{courseId}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Topics",
+            "item": [
+                {
+                    "name": "Add Topic to Course",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    const response = pm.response.json();",
+                                    "    if (response.data.topics && response.data.topics.length > 0) {",
+                                    "        const lastTopic = response.data.topics[response.data.topics.length - 1];",
+                                    "        pm.collectionVariables.set('topicId', lastTopic._id);",
+                                    "    }",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Binary Trees\",\n  \"difficulty\": \"Medium\",\n  \"description\": \"Introduction to tree data structures\",\n  \"examDate\": \"2025-12-25T10:00:00Z\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses/{{courseId}}/topics",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses",
+                                "{{courseId}}",
+                                "topics"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Topic",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Advanced Binary Trees\",\n  \"difficulty\": \"Hard\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses/{{courseId}}/topics/{{topicId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses",
+                                "{{courseId}}",
+                                "topics",
+                                "{{topicId}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Topic",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses/{{courseId}}/topics/{{topicId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses",
+                                "{{courseId}}",
+                                "topics",
+                                "{{topicId}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

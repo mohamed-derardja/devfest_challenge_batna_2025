@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="442a44e1-479b-43f5-b9c3-528fd292c5f7" name="Changes" comment="77777777">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/devfest_challenge_batna_2025.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/app-build-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/build-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/0.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/1.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/10.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/11.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/12.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/2.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/3.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/4.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/5.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/6.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/7.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/8.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/9.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/index.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-development/index.pack.gz.old" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/0.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/1.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/10.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/11.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/2.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/3.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/4.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/5.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/6.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/7.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/8.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/9.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/index.pack.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-development/index.pack.gz.old" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/react-loadable-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app-paths-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/interception-route-rewrite-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/middleware-build-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/middleware-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/middleware-react-loadable-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/next-font-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/next-font-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/server-reference-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/server-reference-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/polyfills.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/development/_buildManifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/development/_ssgManifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/trace" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/types/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/1766123662676.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/1766125353320.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/1766123607017.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/1766123623767.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/1766123635946.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/API_README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/config/db.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/config/swagger.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/aiController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/authController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/compareController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/courseController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/itemController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/studentController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/controllers/studyController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/docs/API_README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/docs/AUTH_IMPLEMENTATION_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/docs/QUICK_START_AUTH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/docs/TESTING_AUTH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/jest.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/middleware/errorHandler.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/middleware/upload-image.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/middleware/upload.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/middleware/validate.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/middleware/verify.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/AIResult.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/Course.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/Item.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/Student.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/Teacher.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/UniversityStaff.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/User.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/models/students.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/postman_collection.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/ai.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/compareRoutes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/courses.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/itemRoutes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/students.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/studyRoutes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/routes/topics.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/scripts/scrap-test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/scripts/seed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/scripts/start_standalone.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/scripts/test-api.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/seed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/server.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/test-endpoints.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/tests/auth.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/tests/courses.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/tests/enroll.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/tests/jest.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/tests/students.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Back-end/utils/geminiCompare.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/next-env.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.local" beforeDir="false" afterPath="$PROJECT_DIR$/.env.local" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BACKEND_NODEJS_SETUP.md" beforeDir="false" afterPath="$PROJECT_DIR$/Back-end/docs/BACKEND_NODEJS_SETUP.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMPLETE_FEATURES.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMPLEMENTATION_COMPLETE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/QUICKSTART.md" beforeDir="false" afterPath="$PROJECT_DIR$/Back-end/docs/QUICKSTART.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QUICK_START_COMPLETE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SYSTEM_STATUS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend-nodejs/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Back-end/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend-nodejs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/middleware/upload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/models/Document.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/models/NewsUpdate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/models/Reward.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/models/Task.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend-nodejs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend-nodejs/routes/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/routes/documents.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/routes/examPrep.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend-nodejs/routes/examPrep.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/routes/news.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/routes/profile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/routes/rewards.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/scripts/listModels.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/scripts/testGeminiGenerate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/seed.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend-nodejs/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-nodejs/uploads/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/exam-prep/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/exam-prep/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api.ts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="SOFT" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Achouri-Mohamed-Tahar&quot;
+  }
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOQrR6lc65sw9i&quot;,
+        &quot;number&quot;: 1
+      },
+      &quot;lastSeen&quot;: 1766098513688
+    }
+  ]
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/mohamed-derardja/devfest_challenge_batna_2025.git&quot;,
+    &quot;accountId&quot;: &quot;7cbd41b2-6e9e-489f-9dbd-3b5965bcdbeb&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="AISelfReview" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="3724ACdrdyvOVGVUe71U3B5l7gc" />
+  <component name="ProjectViewState">
+    <option name="foldersAlwaysOnTop" value="false" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="sortKey" value="BY_TIME_DESCENDING" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/CorTec/devfest_challenge_batna_2025",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.qodana",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\CorTec\\AppData\\Local\\Programs\\WebStorm 2025.2.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\CorTec\devfest_challenge_batna_2025\Back-end" />
+      <recent name="C:\Users\CorTec\devfest_challenge_batna_2025\Back-end\models" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-WS-252.28539.21" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="442a44e1-479b-43f5-b9c3-528fd292c5f7" name="Changes" comment="" />
+      <created>1766087686277</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1766087686277</updated>
+      <workItem from="1766087687686" duration="1207000" />
+      <workItem from="1766088972197" duration="3433000" />
+      <workItem from="1766092508918" duration="5107000" />
+      <workItem from="1766109214784" duration="12494000" />
+      <workItem from="1766137271080" duration="246000" />
+      <workItem from="1766137786070" duration="1784000" />
+    </task>
+    <task id="LOCAL-00001" summary="intial commit">
+      <option name="closed" value="true" />
+      <created>1766087730456</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1766087730456</updated>
+    </task>
+    <task id="LOCAL-00002" summary="intial commit">
+      <option name="closed" value="true" />
+      <created>1766087744550</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1766087744550</updated>
+    </task>
+    <task id="LOCAL-00003" summary="replaced gpa with /20 system">
+      <option name="closed" value="true" />
+      <created>1766089786404</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1766089786404</updated>
+    </task>
+    <task id="LOCAL-00004" summary="22:15 (vibe code stage w7ch )">
+      <option name="closed" value="true" />
+      <created>1766092582712</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1766092582712</updated>
+    </task>
+    <task id="LOCAL-00005" summary="2:49 (vibe code stage w7ch )">
+      <option name="closed" value="true" />
+      <created>1766108968905</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1766108968905</updated>
+    </task>
+    <task id="LOCAL-00006" summary="zbalt 3 nt3 sba7">
+      <option name="closed" value="true" />
+      <created>1766110820293</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1766110820293</updated>
+    </task>
+    <task id="LOCAL-00007" summary="tm3kis 4 nt3 sba7">
+      <option name="closed" value="true" />
+      <created>1766113032377</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1766113032377</updated>
+    </task>
+    <task id="LOCAL-00008" summary="tm3kis 4 nt3 sba7">
+      <option name="closed" value="true" />
+      <created>1766113436501</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1766113436501</updated>
+    </task>
+    <task id="LOCAL-00009" summary="vvvvvvv">
+      <option name="closed" value="true" />
+      <created>1766116584457</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1766116584457</updated>
+    </task>
+    <task id="LOCAL-00010" summary="77777777">
+      <option name="closed" value="true" />
+      <created>1766137412900</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1766137412900</updated>
+    </task>
+    <task id="LOCAL-00011" summary="77777777">
+      <option name="closed" value="true" />
+      <created>1766137819151</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1766137819151</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="intial commit" />
+    <MESSAGE value="replaced gpa with /20 system" />
+    <MESSAGE value="ai?" />
+    <MESSAGE value="22:15 (vibe code stage w7ch )" />
+    <MESSAGE value="2:49 (vibe code stage w7ch )" />
+    <MESSAGE value="zbalt 3 nt3 sba7" />
+    <MESSAGE value="tm3kis 4 nt3 sba7" />
+    <MESSAGE value="vvvvvvv" />
+    <MESSAGE value="77777777" />
+    <option name="LAST_COMMIT_MESSAGE" value="77777777" />
+  </component>
+</project>
