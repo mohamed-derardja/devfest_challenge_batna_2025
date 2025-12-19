@@ -7,10 +7,13 @@ const connectDB = require('./config/db');
 const swaggerSpec = require('./config/swagger');
 const errorHandler = require('./middleware/errorHandler');
 
-//Import routes
+// Import routes
 const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
 const studyRoutes = require('./routes/studyRoutes');
+const authRoutes = require('./routes/auth');    // ← ADD THIS
+const aiRoutes = require('./routes/ai');        // ← ADD THIS
+const itemRoutes = require('./routes/itemRoutes'); // ← ADD THIS
 
 // Initialize Express app
 const app = express();
@@ -37,7 +40,10 @@ app.get('/', (req, res) => {
         documentation: '/api-docs',
         endpoints: {
             students: '/api/students',
-            courses: '/api/courses'
+            courses: '/api/courses',
+            auth: '/api/auth',      // ← ADD THIS
+            study: '/api/study',    // ← ADD THIS
+            ai: '/api/ai'           // ← ADD THIS
         }
     });
 });
@@ -45,6 +51,9 @@ app.get('/', (req, res) => {
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/study', studyRoutes);
+app.use('/api/auth', authRoutes);    // ← ADD THIS
+app.use('/api/ai', aiRoutes);        // ← ADD THIS
+app.use('/api/items', itemRoutes);   // ← ADD THIS
 
 // Error handler (should be last)
 app.use(errorHandler);

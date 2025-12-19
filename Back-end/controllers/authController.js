@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const Student = require('../models/Student');
+const StudentUser = require('../models/StudentUser');
 const Teacher = require('../models/Teacher');
 const UniversityStaff = require('../models/UniversityStaff');
 
@@ -23,7 +23,7 @@ exports.registerStudent = async (req, res, next) => {
             err.statusCode = 409;
             return next(err);
         }
-        const student = await Student.create({ name, email, password, year, department });
+        const student = await StudentUser.create({ name, email, password, year, department });
         const token = signToken(student);
         res.status(201).json({ success: true, token, data: { id: student._id, role: student.role, name: student.name, email: student.email } });
     } catch (error) {
