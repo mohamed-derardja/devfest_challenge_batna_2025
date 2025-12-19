@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import TopBar from '../components/TopBar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Newspaper, 
@@ -23,7 +24,8 @@ import {
   Zap,
   Activity,
   Library,
-  Bookmark
+  Bookmark,
+  Award
 } from 'lucide-react';
 
 interface NewsItem {
@@ -41,10 +43,66 @@ interface NewsItem {
 }
 
 export default function NewsPage() {
-  const [activeTab, setActiveTab] = useState<'all' | 'schedule' | 'academic' | 'campus'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'schedule' | 'academic' | 'campus' | 'ai'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const newsItems: NewsItem[] = [
+  const allNewsItems: NewsItem[] = [
+    // AI Intelligence News
+    {
+      id: 101,
+      title: 'Neural Learning Engine 2.0 Launch',
+      summary: 'AI Summary: Revolutionary AI-powered learning assistant now available to all students. Features personalized study paths, real-time quiz generation, and intelligent content summarization.',
+      category: 'AI Intelligence',
+      date: '30 mins ago',
+      impact: 'high',
+      affectedStudents: 'All Students',
+      changes: [
+        'Personalized AI Study Assistant',
+        'Auto-Generated Practice Tests',
+        'Smart Content Summarization',
+        'Real-time Learning Analytics'
+      ],
+      icon: Sparkles,
+      color: 'text-purple-600',
+      bg: 'bg-purple-50'
+    },
+    {
+      id: 102,
+      title: 'AI Proctoring System Activated',
+      summary: 'AI Summary: Advanced AI proctoring will monitor online exams using facial recognition and behavior analysis. Ensures academic integrity while maintaining student privacy.',
+      category: 'AI Intelligence',
+      date: '2 hours ago',
+      impact: 'high',
+      affectedStudents: 'All Online Exam Takers',
+      changes: [
+        'Facial Recognition Authentication',
+        'Behavior Pattern Analysis',
+        'Screen Monitoring Protection',
+        'Privacy-First Design'
+      ],
+      icon: Zap,
+      color: 'text-purple-600',
+      bg: 'bg-purple-50'
+    },
+    {
+      id: 103,
+      title: 'Intelligent Document Search Enhanced',
+      summary: 'AI Summary: AI chatbot can now help you find any university document, certificate, or form. Natural language queries supported - just ask where to get what you need!',
+      category: 'AI Intelligence',
+      date: '5 hours ago',
+      impact: 'medium',
+      affectedStudents: 'All Students',
+      changes: [
+        'Natural Language Queries',
+        'Instant Document Location',
+        'Step-by-step Guidance',
+        'Office Hours & Locations'
+      ],
+      icon: Activity,
+      color: 'text-purple-600',
+      bg: 'bg-purple-50'
+    },
+    // Schedule Changes
     {
       id: 1,
       title: 'Computer Science 301 Schedule Change',
@@ -64,6 +122,24 @@ export default function NewsPage() {
     },
     {
       id: 2,
+      title: 'Physics Lab Sessions Rescheduled',
+      summary: 'Neural Summary: All Physics lab sessions moved to afternoon slots due to equipment maintenance in the morning. Lab partners will remain the same.',
+      category: 'Schedule',
+      date: '4 hours ago',
+      impact: 'medium',
+      affectedStudents: 'Physics Students',
+      changes: [
+        'New Time: 2:00 PM - 5:00 PM',
+        'Labs A, B, C Affected',
+        'Effective: Dec 21, 2025'
+      ],
+      icon: Calendar,
+      color: 'text-rose-600',
+      bg: 'bg-rose-50'
+    },
+    // Academic News
+    {
+      id: 3,
       title: 'Final Exam Roadmap Published',
       summary: 'Neural Summary: Final exam period extended by 2 days. Mathematics exams moved earlier, Physics exams moved later. System synchronized with your planner.',
       category: 'Academic',
@@ -73,30 +149,115 @@ export default function NewsPage() {
       changes: [
         'Mathematics: Dec 25-27',
         'Physics: Dec 30-31',
-        'Period: Dec 25 - Jan 5'
+        'Extended Period: Dec 25 - Jan 5'
       ],
-      icon: Calendar,
+      icon: BookOpen,
       color: 'text-indigo-600',
       bg: 'bg-indigo-50'
     },
     {
-      id: 3,
-      title: 'Library Neural Hub 24/7 Activation',
-      summary: 'Neural Summary: Library will be open 24/7 during final exams. Additional high-density study rooms activated. Free cognitive recharge service after 10 PM.',
+      id: 4,
+      title: 'New Research Publication Guidelines',
+      summary: 'Neural Summary: Updated guidelines for student research papers and theses. New format requirements and submission deadlines announced for all graduate programs.',
+      category: 'Academic',
+      date: '6 hours ago',
+      impact: 'high',
+      affectedStudents: 'Graduate Students',
+      changes: [
+        'APA 7th Edition Required',
+        'Plagiarism Check Mandatory',
+        'Digital Submission Only',
+        'Deadline: Jan 15, 2026'
+      ],
+      icon: BookOpen,
+      color: 'text-indigo-600',
+      bg: 'bg-indigo-50'
+    },
+    {
+      id: 5,
+      title: 'Scholarship Application Period Open',
+      summary: 'Neural Summary: Merit-based scholarships now accepting applications. Priority given to high-achieving students with financial need. Apply before deadline!',
+      category: 'Academic',
+      date: '1 day ago',
+      impact: 'medium',
+      affectedStudents: 'All Students',
+      changes: [
+        'Application Opens: Dec 20',
+        'Deadline: Jan 31, 2026',
+        'Required GPA: 3.5+',
+        'Submit via Student Portal'
+      ],
+      icon: Award,
+      color: 'text-indigo-600',
+      bg: 'bg-indigo-50'
+    },
+    // Campus Life
+    {
+      id: 6,
+      title: 'Library Extended Hours During Finals',
+      summary: 'Neural Summary: Library will be open 24/7 during final exams period. Additional quiet study rooms available. Free refreshments provided after 10 PM.',
       category: 'Campus',
       date: '5 hours ago',
       impact: 'medium',
       affectedStudents: 'All Scholars',
       changes: [
-        '24/7 Ops: Dec 20 - Jan 5',
-        '10 New Study Modules',
-        'Recharge: 10 PM - 6 AM'
+        '24/7 Operations: Dec 20 - Jan 5',
+        '10 New Study Rooms',
+        'Free Coffee: 10 PM - 6 AM'
       ],
       icon: Library,
       color: 'text-emerald-600',
       bg: 'bg-emerald-50'
+    },
+    {
+      id: 7,
+      title: 'Student Health Center New Services',
+      summary: 'Neural Summary: University health center now offers mental wellness support and free flu vaccinations. Walk-in appointments available daily.',
+      category: 'Campus',
+      date: '8 hours ago',
+      impact: 'low',
+      affectedStudents: 'All Students',
+      changes: [
+        'Mental Wellness Counseling',
+        'Free Flu Vaccinations',
+        'Walk-in Hours: 9 AM - 4 PM',
+        'Appointments: Online Booking'
+      ],
+      icon: Users,
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-50'
+    },
+    {
+      id: 8,
+      title: 'Campus WiFi Network Upgrade',
+      summary: 'Neural Summary: University WiFi infrastructure upgraded to 5G speeds. New access points installed across all buildings. Improved coverage in outdoor areas.',
+      category: 'Campus',
+      date: '1 day ago',
+      impact: 'medium',
+      affectedStudents: 'All Students',
+      changes: [
+        '5G Speed Networks',
+        'Better Outdoor Coverage',
+        'New Network: UniNet-5G',
+        'Active: Dec 20, 2025'
+      ],
+      icon: Zap,
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-50'
     }
   ];
+
+  // Filter news based on active tab
+  const getFilteredNews = () => {
+    if (activeTab === 'all') return allNewsItems;
+    if (activeTab === 'ai') return allNewsItems.filter(item => item.category === 'AI Intelligence');
+    if (activeTab === 'schedule') return allNewsItems.filter(item => item.category === 'Schedule');
+    if (activeTab === 'academic') return allNewsItems.filter(item => item.category === 'Academic');
+    if (activeTab === 'campus') return allNewsItems.filter(item => item.category === 'Campus');
+    return allNewsItems;
+  };
+
+  const newsItems = getFilteredNews();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -116,8 +277,9 @@ export default function NewsPage() {
       <div className="ivy-mesh" />
       <div className="grain" />
       <Navbar />
+      <TopBar />
       
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-10 py-12 relative z-10">
+      <main className="max-w-[1700px] px-6 lg:px-10 lg:pl-[300px] py-12 relative z-10">
         {/* Header */}
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3">
@@ -161,6 +323,7 @@ export default function NewsPage() {
         <nav className="flex items-center gap-1 p-1 bg-white/50 backdrop-blur-md border border-slate-200 rounded-2xl mb-12 w-fit max-w-full overflow-x-auto">
           {[
             { id: 'all', label: 'All Intelligence', icon: Activity },
+            { id: 'ai', label: 'AI Intelligence', icon: Sparkles },
             { id: 'schedule', label: 'Schedules', icon: Clock },
             { id: 'academic', label: 'Academic', icon: Bookmark },
             { id: 'campus', label: 'Campus Life', icon: MapPin },
@@ -303,9 +466,10 @@ export default function NewsPage() {
               <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Intelligence Streams</h2>
               <div className="space-y-4">
                 {[
-                  { name: 'Schedules', count: 12, color: 'bg-rose-500' },
-                  { name: 'Academic', count: 45, color: 'bg-indigo-500' },
-                  { name: 'Campus Life', count: 28, color: 'bg-emerald-500' }
+                  { name: 'AI Intelligence', count: 3, total: 50, color: 'bg-purple-500' },
+                  { name: 'Schedules', count: 2, total: 50, color: 'bg-rose-500' },
+                  { name: 'Academic', count: 3, total: 50, color: 'bg-indigo-500' },
+                  { name: 'Campus Life', count: 3, total: 50, color: 'bg-emerald-500' }
                 ].map((stream, i) => (
                   <div key={i} className="space-y-2">
                     <div className="flex justify-between items-end">
@@ -313,7 +477,7 @@ export default function NewsPage() {
                       <span className="text-sm font-bold text-slate-900">{stream.count}</span>
                     </div>
                     <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-                      <div className={`h-full ${stream.color}`} style={{ width: `${(stream.count / 50) * 100}%` }} />
+                      <div className={`h-full ${stream.color}`} style={{ width: `${(stream.count / stream.total) * 100}%` }} />
                     </div>
                   </div>
                 ))}

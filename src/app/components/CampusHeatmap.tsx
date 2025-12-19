@@ -1,8 +1,12 @@
 'use client';
 
-import { MapPin, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, AlertCircle, Building2, Maximize2 } from 'lucide-react';
 
 export default function CampusHeatmap() {
+  const [selectedLocation, setSelectedLocation] = useState<number | null>(null);
+  const [isFullMap, setIsFullMap] = useState(false);
+
   const locations = [
     {
       name: 'Bibliotheque Centrale',
@@ -60,8 +64,58 @@ export default function CampusHeatmap() {
 
   return (
     <div className="space-y-4">
+      {/* Header with Building List */}
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-xl">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+              <Building2 className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold">Campus Building Map</h3>
+              <p className="text-sm text-indigo-100">Live lost items heatmap visualization</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsFullMap(!isFullMap)}
+            className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all"
+            title="Toggle Fullscreen Map"
+          >
+            <Maximize2 className="w-5 h-5" />
+          </button>
+        </div>
+        
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {locations.map((loc, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedLocation(selectedLocation === idx ? null : idx)}
+              className={`p-3 rounded-xl transition-all ${
+                selectedLocation === idx 
+                  ? 'bg-white text-indigo-600 shadow-lg scale-105' 
+                  : 'bg-white/10 hover:bg-white/20'
+              }`}
+            >
+              <div className="text-2xl font-bold">{loc.count}</div>
+              <div className="text-xs opacity-90 truncate">{loc.name}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Satellite Map */}
-      <div className="rounded-xl overflow-hidden border-4 border-gray-300 shadow-2xl mb-6 relative" style={{ height: '600px' }}>
+      <div className={`rounded-2xl overflow-hidden border-4 border-slate-300 shadow-2xl relative transition-all ${
+        isFullMap ? 'fixed inset-4 z-[200]' : ''
+      }`} style={{ height: isFullMap ? 'calc(100vh - 2rem)' : '600px' }}>
+        {isFullMap && (
+          <button
+            onClick={() => setIsFullMap(false)}
+            className="absolute top-4 right-4 z-10 px-6 py-3 bg-white rounded-xl shadow-lg font-bold hover:bg-slate-50 transition-all"
+          >
+            Close Map
+          </button>
+        )}
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3229.8926447891676!2d6.161187876046743!3d35.558044472604074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12f4157f1e6f9c0d%3A0x7c3c5b8c5b8c5b8c!2sUniversity%20Batna%202!5e1!3m2!1sen!2sdz!4v1702919234567!5m2!1sen!2sdz"
           style={{ border: 0, width: '100%', height: '100%' }}
@@ -80,6 +134,21 @@ export default function CampusHeatmap() {
               style={{ top: location.position.top, left: location.position.left }}
             >
               <div className="relative group cursor-pointer">
+                {/* Highlight if selected */}
+                {selectedLocation === idx && (
+                  <div className="absolute -translate-x-1/2 -translate-y-1/2 animate-ping">
+                    <div 
+                      className="rounded-full"
+                      style={{
+                        width: `${location.size * 1.5}px`,
+                        height: `${location.size * 1.5}px`,
+                        backgroundColor: location.color,
+                        opacity: 0.4
+                      }}
+                    ></div>
+                  </div>
+                )}
+
                 {/* Pulsing circles */}
                 <div className="absolute -translate-x-1/2 -translate-y-1/2">
                   <div 
@@ -117,16 +186,19 @@ export default function CampusHeatmap() {
 
                 {/* Count badge */}
                 <div 
-                  className="absolute -translate-x-1/2 -translate-y-1/2 text-white px-3 py-1 rounded-full shadow-2xl border-4 border-white font-bold text-xs whitespace-nowrap group-hover:scale-125 transition-transform"
+                  onClick={() => setSelectedLocation(selectedLocation === idx ? null : idx)}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 text-white px-3 py-1 rounded-full shadow-2xl border-4 border-white font-bold text-xs whitespace-nowrap group-hover:scale-125 transition-transform cursor-pointer"
                   style={{ backgroundColor: location.color }}
                 >
                   {location.count}
                 </div>
 
-                {/* Hover popup */}
-                {location.details.length > 0 && (
+                {/* Hover popup - Always show if selected */}
+                {(location.details.length > 0) && (
                   <div 
-                    className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 bg-white rounded-xl shadow-2xl p-4 w-72 border-4 opacity-0 group-hover:opacity-100 transition-opacity z-50"
+                    className={`absolute top-full left-1/2 transform -translate-x-1/2 mt-4 bg-white rounded-xl shadow-2xl p-4 w-72 border-4 transition-opacity z-50 ${
+                      selectedLocation === idx ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                    }`}
                     style={{ borderColor: location.color }}
                   >
                     <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-lg">

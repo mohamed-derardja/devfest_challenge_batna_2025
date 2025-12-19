@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import TopBar from '../components/TopBar';
+import DocumentChatbot from '../components/DocumentChatbot';
 import { motion, AnimatePresence } from 'framer-motion';
+import { documentsAPI } from '@/lib/api';
 import { 
   FileSearch, 
   Search, 
@@ -31,6 +34,9 @@ import {
 export default function DocumentsPage() {
   const [activeTab, setActiveTab] = useState<'search' | 'documents' | 'internships' | 'scholarships'>('search');
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -45,13 +51,32 @@ export default function DocumentsPage() {
     visible: { opacity: 1, y: 0 }
   };
 
+  const handleAISearch = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setSearchError('');
+    
+    try {
+      const result = await documentsAPI.searchWithAI(searchQuery);
+      setSearchResults(result);
+    } catch (error: any) {
+      setSearchError(error.message || 'Search failed. Please try again.');
+      console.error('AI Search Error:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden">
       <div className="ivy-mesh" />
       <div className="grain" />
       <Navbar />
+      <TopBar />
+      <DocumentChatbot />
       
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-10 py-12 relative z-10">
+      <main className="max-w-[1700px] px-6 lg:px-10 lg:pl-[300px] py-12 relative z-10">
         {/* Header */}
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3">
@@ -138,14 +163,35 @@ export default function DocumentsPage() {
                     <textarea
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleAISearch())}
                       placeholder="Ask anything... e.g., 'Find internships in AI for summer 2026'"
                       className="w-full pl-16 pr-6 py-8 bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] focus:border-emerald-500/30 focus:ring-4 focus:ring-emerald-500/5 focus:bg-white transition-all outline-none font-medium text-slate-700 text-lg shadow-sm resize-none"
                       rows={2}
                     />
-                    <button className="absolute right-4 bottom-4 px-8 py-3 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all">
-                      Search AI
+                    <button 
+                      onClick={handleAISearch}
+                      disabled={isSearching || !searchQuery.trim()}
+                      className="absolute right-4 bottom-4 px-8 py-3 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSearching ? 'Searching...' : 'Search AI'}
                     </button>
                   </div>
+
+                  {searchError && (
+                    <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-sm font-medium">
+                      {searchError}
+                    </div>
+                  )}
+
+                  {searchResults && (
+                    <div className="p-6 bg-white border border-emerald-200 rounded-3xl">
+                      <h3 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-emerald-600" />
+                        AI Search Results
+                      </h3>
+                      <p className="text-slate-700 leading-relaxed whitespace-pre-line">{searchResults.summary || searchResults.answer || JSON.stringify(searchResults, null, 2)}</p>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
                     {[

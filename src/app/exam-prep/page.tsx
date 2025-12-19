@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
+import TopBar from '../components/TopBar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { examPrepAPI } from '@/lib/api';
 import { 
@@ -483,8 +484,9 @@ export default function ExamPrepPage() {
       <div className="ivy-mesh" />
       <div className="grain" />
       <Navbar />
+      <TopBar />
       
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-10 py-12 relative z-10">
+      <main className="max-w-[1700px] px-6 lg:px-10 lg:pl-[300px] py-12 relative z-10">
         {/* Header */}
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3">

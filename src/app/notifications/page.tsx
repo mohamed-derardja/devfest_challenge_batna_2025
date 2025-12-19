@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import TopBar from '../components/TopBar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bell, 
@@ -127,8 +128,9 @@ export default function NotificationsPage() {
       <div className="ivy-mesh" />
       <div className="grain" />
       <Navbar />
+      <TopBar />
       
-      <main className="max-w-[1200px] mx-auto px-6 lg:px-10 py-12 relative z-10">
+      <main className="max-w-[1600px] px-6 lg:px-10 lg:pl-[300px] py-12 relative z-10">
         {/* Header */}
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3">

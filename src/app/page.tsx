@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
+import TopBar from './components/TopBar';
 import { 
   BookOpen, FileSearch, Package, Bell, Award, Newspaper, 
   LogOut, User, TrendingUp, Calendar, Clock, ArrowRight, 
@@ -107,8 +108,9 @@ export default function HomePage() {
       <div className="grain" />
 
       <Navbar />
+      <TopBar />
 
-      <main className="relative z-10 min-h-screen p-6 md:p-10 lg:p-14 max-w-[1500px] mx-auto">
+      <main className="relative z-10 min-h-screen p-6 md:p-10 lg:p-14 lg:pl-[300px] max-w-[1800px]">
         {/* Modern Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
           <div className="space-y-2">

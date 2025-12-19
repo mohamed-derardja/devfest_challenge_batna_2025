@@ -3,6 +3,7 @@ const router = express.Router();
 const LostItem = require('../models/LostItem');
 const FoundItem = require('../models/FoundItem');
 const auth = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
 // Get all lost items
 router.get('/lost', auth, async (req, res) => {
@@ -14,11 +15,15 @@ router.get('/lost', auth, async (req, res) => {
   }
 });
 
-// Create lost item
-router.post('/lost', auth, async (req, res) => {
+// Create lost item (with optional image upload)
+router.post('/lost', auth, upload.array('images', 5), async (req, res) => {
   try {
+    // Get image paths if uploaded
+    const images = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+    
     const item = new LostItem({
       ...req.body,
+      images,
       owner: req.user.userId
     });
     await item.save();
@@ -39,11 +44,15 @@ router.get('/found', auth, async (req, res) => {
   }
 });
 
-// Create found item
-router.post('/found', auth, async (req, res) => {
+// Create found item (with optional image upload)
+router.post('/found', auth, upload.array('images', 5), async (req, res) => {
   try {
+    // Get image paths if uploaded
+    const images = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+    
     const item = new FoundItem({
       ...req.body,
+      images,
       finder: req.user.userId
     });
     await item.save();
