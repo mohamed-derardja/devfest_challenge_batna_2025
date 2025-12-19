@@ -2,6 +2,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const Student = require('./models/Student');
+const Teacher = require('./models/Teacher');
+const UniversityStaff = require('./models/UniversityStaff');
 const Course = require('./models/Course');
 
 // Sample data
@@ -144,10 +146,37 @@ const courses = [
     }
 ];
 
+const teachers = [
+    {
+        name: 'Dr. Amina Belhadj',
+        email: 'amina.belhadj@university.dz',
+        password: 'teacher123',
+        department: 'Computer Science',
+        title: 'Professor'
+    },
+    {
+        name: 'Dr. Yacine Messaoudi',
+        email: 'yacine.messaoudi@university.dz',
+        password: 'teacher456',
+        department: 'Software Engineering',
+        title: 'Associate Professor'
+    }
+];
+
+const universityStaff = [
+    {
+        name: 'Sami Kaddour',
+        email: 'sami.kaddour@admin.dz',
+        password: 'admin123',
+        position: 'Registrar'
+    }
+];
+
 const students = [
     {
         name: 'Ahmed Benali',
         email: 'ahmed.benali@example.com',
+        password: 'student123',
         year: 3,
         department: 'Computer Science',
         averageGrade: 18.5,
@@ -156,6 +185,7 @@ const students = [
     {
         name: 'Sarah Mansouri',
         email: 'sarah.mansouri@example.com',
+        password: 'student123',
         year: 2,
         department: 'Computer Science',
         averageGrade: 19.5,
@@ -164,6 +194,7 @@ const students = [
     {
         name: 'Karim Zoubir',
         email: 'karim.zoubir@example.com',
+        password: 'student123',
         year: 4,
         department: 'Software Engineering',
         averageGrade: 17.5,
@@ -172,6 +203,7 @@ const students = [
     {
         name: 'Fatima Amrani',
         email: 'fatima.amrani@example.com',
+        password: 'student123',
         year: 1,
         department: 'Computer Science',
         averageGrade: 19.0,
@@ -180,6 +212,7 @@ const students = [
     {
         name: 'Youcef Bouazza',
         email: 'youcef.bouazza@example.com',
+        password: 'student123',
         year: 3,
         department: 'Information Systems',
         averageGrade: 17.0,
@@ -188,6 +221,7 @@ const students = [
     {
         name: 'Amira Taleb',
         email: 'amira.taleb@example.com',
+        password: 'student123',
         year: 2,
         department: 'Computer Science',
         averageGrade: 18.0,
@@ -196,6 +230,7 @@ const students = [
     {
         name: 'Mohamed Khelifi',
         email: 'mohamed.khelifi@example.com',
+        password: 'student123',
         year: 4,
         department: 'Software Engineering',
         averageGrade: 16.5,
@@ -204,6 +239,7 @@ const students = [
     {
         name: 'Nadia Cherif',
         email: 'nadia.cherif@example.com',
+        password: 'student123',
         year: 1,
         department: 'Computer Science',
         averageGrade: 19.5,
@@ -212,6 +248,7 @@ const students = [
     {
         name: 'Rachid Mekki',
         email: 'rachid.mekki@example.com',
+        password: 'student123',
         year: 3,
         department: 'Computer Science',
         averageGrade: 18.5,
@@ -220,6 +257,7 @@ const students = [
     {
         name: 'Leila Hamdi',
         email: 'leila.hamdi@example.com',
+        password: 'student123',
         year: 2,
         department: 'Information Systems',
         averageGrade: 17.5,
@@ -235,7 +273,19 @@ const seedDatabase = async () => {
         // Clear existing data
         console.log('Clearing existing data...');
         await Student.deleteMany();
+        await Teacher.deleteMany();
+        await UniversityStaff.deleteMany();
         await Course.deleteMany();
+
+        // Create teachers
+        console.log('Creating teachers...');
+        const createdTeachers = await Teacher.insertMany(teachers);
+        console.log(`✓ Created ${createdTeachers.length} teachers`);
+
+        // Create university staff
+        console.log('Creating university staff...');
+        const createdStaff = await UniversityStaff.insertMany(universityStaff);
+        console.log(`✓ Created ${createdStaff.length} staff members`);
 
         // Create courses
         console.log('Creating courses...');
@@ -293,6 +343,12 @@ const seedDatabase = async () => {
         console.log('\nSummary:');
         console.log(`- ${createdCourses.length} courses with multiple topics`);
         console.log(`- ${createdStudents.length} students with enrolled courses`);
+        console.log(`- ${createdTeachers.length} teachers (admins)`);
+        console.log(`- ${createdStaff.length} university staff (super admins)`);
+        console.log('\nDefault credentials:');
+        console.log('Teacher: amina.belhadj@university.dz / teacher123');
+        console.log('Staff: sami.kaddour@admin.dz / admin123');
+        console.log('Student: ahmed.benali@example.com / student123');
         console.log('\nYou can now test the API endpoints!');
 
         if (require.main === module) {

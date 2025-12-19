@@ -12,6 +12,7 @@ const {
     deleteTopic
 } = require('../controllers/courseController');
 const validate = require('../middleware/validate');
+const { protect, authorize } = require('../middleware/auth');
 
 const courseIdParam = param('id').isMongoId().withMessage('Invalid course id');
 const topicIdParam = param('topicId').optional().isMongoId().withMessage('Invalid topic id');
@@ -123,7 +124,7 @@ const topicUpdateRules = [
  */
 router.route('/')
     .get(getCourses)
-    .post(validate(courseCreateRules), createCourse);
+    .post(protect, authorize('teacher', 'staff'), validate(courseCreateRules), createCourse);
 
 /**
  * @swagger
@@ -253,8 +254,8 @@ router.route('/')
  */
 router.route('/:id')
     .get(validate([courseIdParam]), getCourse)
-    .put(validate(courseUpdateRules), updateCourse)
-    .delete(validate([courseIdParam]), deleteCourse);
+    .put(protect, authorize('teacher', 'staff'), validate(courseUpdateRules), updateCourse)
+    .delete(protect, authorize('teacher', 'staff'), validate([courseIdParam]), deleteCourse);
 
 /**
  * @swagger
@@ -314,7 +315,7 @@ router.route('/:id')
  *               $ref: '#/components/schemas/Error'
  */
 router.route('/:id/topics')
-    .post(validate(topicCreateRules), addTopic);
+    .post(protect, authorize('teacher', 'staff'), validate(topicCreateRules), addTopic);
 
 /**
  * @swagger
@@ -418,7 +419,7 @@ router.route('/:id/topics')
  *               $ref: '#/components/schemas/Error'
  */
 router.route('/:id/topics/:topicId')
-    .put(validate(topicUpdateRules), updateTopic)
-    .delete(validate([courseIdParam, topicIdParam]), deleteTopic);
+    .put(protect, authorize('teacher', 'staff'), validate(topicUpdateRules), updateTopic)
+    .delete(protect, authorize('teacher', 'staff'), validate([courseIdParam, topicIdParam]), deleteTopic);
 
 module.exports = router;

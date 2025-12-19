@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const connectDB = require('../config/db');
 const Student = require('../models/Student');
+const UniversityStaff = require('../models/UniversityStaff');
 
 let app;
 let mongoServer;
+let staffToken;
 
 beforeAll(async () => {
     process.env.NODE_ENV = 'test';
@@ -13,6 +15,20 @@ beforeAll(async () => {
     process.env.MONGODB_URI = mongoServer.getUri();
     await connectDB();
     app = require('../server');
+
+    // Create a staff user for admin operations
+    await UniversityStaff.create({
+        name: 'Admin',
+        email: 'admin@test.com',
+        password: 'admin123',
+        position: 'Test Admin'
+    });
+
+    const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({ email: 'admin@test.com', password: 'admin123' });
+
+    staffToken = loginRes.body.token;
 });
 
 afterEach(async () => {
@@ -30,11 +46,11 @@ describe('Student CRUD operations', () => {
     describe('GET /api/students', () => {
         test('returns all students', async () => {
             await Student.create([
-                { name: 'Alice', email: 'alice@test.com', year: 1, department: 'CS' },
-                { name: 'Bob', email: 'bob@test.com', year: 2, department: 'Math' }
+                { name: 'Alice', email: 'alice@test.com', password: 'pass123', year: 1, department: 'CS' },
+                { name: 'Bob', email: 'bob@test.com', password: 'pass123', year: 2, department: 'Math' }
             ]);
 
-            const res = await request(app).get('/api/students');
+            const res = await request(app).get('/api/students').set('Authorization', `Bearer ${staffToken}`);
 
             expect(res.status).toBe(200);
             expect(res.body.success).toBe(true);
@@ -43,7 +59,7 @@ describe('Student CRUD operations', () => {
         });
 
         test('returns empty array when no students exist', async () => {
-            const res = await request(app).get('/api/students');
+            const res = await request(app).get('/api/students').set('Authorization', `Bearer ${staffToken}`);
 
             expect(res.status).toBe(200);
             expect(res.body.data).toHaveLength(0);
@@ -55,11 +71,12 @@ describe('Student CRUD operations', () => {
             const student = await Student.create({
                 name: 'Charlie',
                 email: 'charlie@test.com',
+                password: 'pass123',
                 year: 3,
                 department: 'Physics'
             });
 
-            const res = await request(app).get(`/api/students/${student._id}`);
+            const res = await request(app).get(`/api/students/${student._id}`).set('Authorization', `Bearer ${staffToken}`);
 
             expect(res.status).toBe(200);
             expect(res.body.success).toBe(true);

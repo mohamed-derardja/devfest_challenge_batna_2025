@@ -4,12 +4,14 @@ Student management system backend with complete CRUD operations, validation, tes
 
 ## Features
 
+- ✅ **Authentication & Authorization** - JWT-based auth with role-based access control
+- ✅ **Role-Based Hierarchy** - Student (user), Teacher (admin), University Staff (super admin)
 - ✅ **Student CRUD Operations** - Create, read, update, delete students
 - ✅ **Course CRUD Operations** - Manage courses and topics
 - ✅ **Enrollment System** - Enroll students with validation (course exists, duplicate prevention, max active courses)
 - ✅ **Request Validation** - express-validator for all endpoints
-- ✅ **Error Handling** - Standardized error responses (400, 404, 409, 500)
-- ✅ **Comprehensive Tests** - 44 integration tests using Jest + Supertest + MongoDB Memory Server
+- ✅ **Error Handling** - Standardized error responses (400, 401, 403, 404, 409, 500)
+- ✅ **Comprehensive Tests** - 60+ integration tests using Jest + Supertest + MongoDB Memory Server
 - ✅ **API Documentation** - Swagger/OpenAPI at `/api-docs`
 - ✅ **Postman Collection** - Ready-to-import collection with auto-variable capture
 
@@ -30,6 +32,8 @@ MONGODB_URI=mongodb://localhost:27017/devfest
 PORT=5000
 NODE_ENV=development
 MAX_ACTIVE_COURSES=5
+JWT_SECRET=your_secret_key_here
+JWT_EXPIRES_IN=7d
 ```
 
 ### Run Development Server
@@ -63,25 +67,45 @@ Import `postman_collection.json` into Postman for quick testing. Collection incl
 
 ## API Endpoints
 
+### Authentication
+- `POST /api/auth/register` - Register new student (public)
+- `POST /api/auth/login` - Login with email/password (returns JWT)
+- `GET /api/auth/me` - Get current user profile (protected)
+- `POST /api/auth/register/teacher` - Register teacher (staff only)
+- `POST /api/auth/register/staff` - Register staff (staff only)
+
 ### Students
-- `GET /api/students` - Get all students
-- `GET /api/students/:id` - Get student by ID
-- `POST /api/students` - Create student
-- `PUT /api/students/:id` - Update student
-- `DELETE /api/students/:id` - Delete student
-- `POST /api/students/:id/enroll` - Enroll student in course
+- `GET /api/students` - Get all students (teacher/staff only)
+- `GET /api/students/:id` - Get student by ID (authenticated)
+- `POST /api/students` - Create student (teacher/staff only)
+- `PUT /api/students/:id` - Update student (authenticated, own profile or admin)
+- `DELETE /api/students/:id` - Delete student (teacher/staff only)
+- `POST /api/students/:id/enroll` - Enroll student in course (authenticated)
 
 ### Courses
-- `GET /api/courses` - Get all courses
-- `GET /api/courses/:id` - Get course by ID
-- `POST /api/courses` - Create course
-- `PUT /api/courses/:id` - Update course
-- `DELETE /api/courses/:id` - Delete course
+- `GET /api/courses` - Get all courses (public)
+- `GET /api/courses/:id` - Get course by ID (public)
+- `POST /api/courses` - Create course (teacher/staff only)
+- `PUT /api/courses/:id` - Update course (teacher/staff only)
+- `DELETE /api/courses/:id` - Delete course (teacher/staff only)
 
 ### Topics
-- `POST /api/courses/:id/topics` - Add topic to course
-- `PUT /api/courses/:id/topics/:topicId` - Update topic
-- `DELETE /api/courses/:id/topics/:topicId` - Delete topic
+- `POST /api/courses/:id/topics` - Add topic to course (teacher/staff only)
+- `PUT /api/courses/:id/topics/:topicId` - Update topic (teacher/staff only)
+- `DELETE /api/courses/:id/topics/:topicId` - Delete topic (teacher/staff only)
+
+## Authorization & Roles
+
+The system implements three user roles:
+
+- **Student** (`student`) - Regular users, can view their profile, enroll in courses
+- **Teacher** (`teacher`) - Admins, can manage courses, topics, and view all students
+- **University Staff** (`staff`) - Super admins, can create teachers and staff, full system access
+
+Protected endpoints require a JWT token in the `Authorization` header:
+```
+Authorization: Bearer <your_jwt_token>
+```
 
 ## Validation Rules
 
@@ -110,6 +134,8 @@ Import `postman_collection.json` into Postman for quick testing. Collection incl
 The API returns standardized error responses:
 
 - **400 Bad Request** - Validation errors, invalid ObjectIds, business rule violations
+- **401 Unauthorized** - Missing or invalid authentication token
+- **403 Forbidden** - Insufficient permissions for the requested operation
 - **404 Not Found** - Resource not found
 - **409 Conflict** - Duplicate email/code, already enrolled
 - **500 Internal Server Error** - Unexpected errors
@@ -125,7 +151,8 @@ Example error response:
 ## Testing
 
 ### Test Coverage
-- **44 passing tests** across 3 test suites
+- **60+ passing tests** across 4 test suites
+- Authentication & Authorization (12 tests)
 - Student CRUD (13 tests)
 - Course CRUD + Topics (27 tests)
 - Enrollment flow (4 tests)
@@ -161,19 +188,26 @@ Back-end/
 │   ├── db.js              # MongoDB connection
 │   └── swagger.js         # Swagger/OpenAPI configuration
 ├── controllers/
+│   ├── authController.js  # Auth & registration logic
 │   ├── courseController.js # Course business logic
 │   └── studentController.js # Student business logic
 ├── middleware/
+│   ├── auth.js            # JWT authentication & authorization
 │   ├── errorHandler.js    # Global error handler
 │   └── validate.js        # Request validation middleware
 ├── models/
+│   ├── User.js            # Base user schema with discriminators
+│   ├── Student.js         # Student discriminator schema
+│   ├── Teacher.js         # Teacher discriminator schema
+│   ├── UniversityStaff.js # University staff discriminator schema
 │   ├── Course.js          # Course schema
-│   ├── Student.js         # Student schema
 │   └── AIResult.js        # AI results schema
 ├── routes/
+│   ├── auth.js            # Authentication routes
 │   ├── courses.js         # Course routes + Swagger docs
 │   └── students.js        # Student routes + Swagger docs
 ├── tests/
+│   ├── auth.test.js       # Authentication tests
 │   ├── courses.test.js    # Course integration tests
 │   ├── students.test.js   # Student integration tests
 │   └── enroll.test.js     # Enrollment tests
@@ -185,8 +219,8 @@ Back-end/
 
 ## Next Steps (Production Ready)
 
-- [ ] Add authentication (JWT)
-- [ ] Add authorization (roles: admin, student, teacher)
+- [x] Add authentication (JWT)
+- [x] Add authorization (roles: student, teacher, staff)
 - [ ] Add pagination/filtering/sorting for list endpoints
 - [ ] Add rate limiting
 - [ ] Add security headers (helmet)
@@ -195,6 +229,8 @@ Back-end/
 - [ ] Dockerize application
 - [ ] Add CI/CD pipeline
 - [ ] Add performance monitoring
+- [ ] Add password reset functionality
+- [ ] Add email verification
 
 ## Technologies
 

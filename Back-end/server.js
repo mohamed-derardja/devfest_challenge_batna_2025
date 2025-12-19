@@ -8,6 +8,7 @@ const swaggerSpec = require('./config/swagger');
 const errorHandler = require('./middleware/errorHandler');
 
 // Import routes
+const authRoutes = require('./routes/auth');
 const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
 
@@ -35,12 +36,14 @@ app.get('/', (req, res) => {
         version: '1.0.0',
         documentation: '/api-docs',
         endpoints: {
+            auth: '/api/auth',
             students: '/api/students',
             courses: '/api/courses'
         }
     });
 });
 
+app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 

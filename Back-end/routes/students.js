@@ -10,6 +10,7 @@ const {
     enrollInCourse
 } = require('../controllers/studentController');
 const validate = require('../middleware/validate');
+const { protect, authorize } = require('../middleware/auth');
 
 const studentIdParam = param('id').isMongoId().withMessage('Invalid student id');
 
@@ -113,8 +114,8 @@ const enrollRules = [
  *               $ref: '#/components/schemas/Error'
  */
 router.route('/')
-    .get(getStudents)
-    .post(validate(studentCreateRules), createStudent);
+    .get(protect, authorize('teacher', 'staff'), getStudents)
+    .post(protect, authorize('teacher', 'staff'), validate(studentCreateRules), createStudent);
 
 /**
  * @swagger
@@ -245,9 +246,9 @@ router.route('/')
  *               $ref: '#/components/schemas/Error'
  */
 router.route('/:id')
-    .get(validate([studentIdParam]), getStudent)
-    .put(validate(studentUpdateRules), updateStudent)
-    .delete(validate([studentIdParam]), deleteStudent);
+    .get(protect, validate([studentIdParam]), getStudent)
+    .put(protect, validate(studentUpdateRules), updateStudent)
+    .delete(protect, authorize('teacher', 'staff'), validate([studentIdParam]), deleteStudent);
 
 /**
  * @swagger
@@ -305,6 +306,6 @@ router.route('/:id')
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/:id/enroll', validate(enrollRules), enrollInCourse);
+router.post('/:id/enroll', protect, validate(enrollRules), enrollInCourse);
 
 module.exports = router;
