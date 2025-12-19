@@ -12,6 +12,9 @@ const authRoutes = require('./routes/auth');
 const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
 const studyRoutes = require('./routes/studyRoutes')
+const itemRoutes = require('./routes/itemRoutes');
+const compareRoutes = require('./routes/compareRoutes.js');
+
 // Initialize Express app
 const app = express();
 
@@ -47,6 +50,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/study', studyRoutes);
+app.use('/api/items', itemRoutes);
+app.use('/api/compare', compareRoutes);
 
 
 //PLS JUST LET IT I KNOW IT'S NOT ITS PLACE
