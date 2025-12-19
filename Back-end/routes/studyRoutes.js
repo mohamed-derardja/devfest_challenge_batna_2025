@@ -18,6 +18,9 @@ router.post(
   studyController.summarizeContent
 );
 
+router.post('/resources', studyController.recommendResources);
+
+router.post('/exam', studyController.generateExercises);
 // router.get(
 //     '/internships',
 //     studyController.fetchInternships
@@ -25,6 +28,8 @@ router.post(
 
 
 router.get('/interships', studyController.getInternships);
+router.get('/scholarships', studyController.getScholarships);
+
 
 router.post('/plan', studyController.studyPlanner);
 

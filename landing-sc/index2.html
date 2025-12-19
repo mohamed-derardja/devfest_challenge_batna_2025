@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholarship Listings</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-weight: 300;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+        }
+        .scholarship-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+        .scholarship-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+            transition: transform 0.2s ease;
+        }
+        .scholarship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .scholarship-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .eligibility-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        .organization {
+            display: block;
+            font-size: 1.1em;
+            color: #34495e;
+            margin-bottom: 20px;
+            font-weight: 500;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .amount {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 15px;
+            padding: 8px 0;
+        }
+        .deadline {
+            background-color: #ffeaa7;
+            color: #d35400;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .requirements-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ecf0f1;
+        }
+        .requirements-title {
+            font-size: 0.95em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .requirements-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .requirement-item {
+            background-color: #f8f9fa;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 0.95em;
+            border-left: 3px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scholarship Opportunities in Algeria</h1>
+    
+    <div class="scholarship-container">
+        <!-- Scholarship 1 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Women in Technology Scholarship</div>
+            <span class="eligibility-badge">92% Eligible</span>
+            <span class="organization">Tech Women Algeria</span>
+            <div class="amount">40,000 DA</div>
+            <div class="deadline">Deadline: Dec 28, 2025</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Female Student</li>
+                    <li class="requirement-item">STEM Field</li>
+                    <li class="requirement-item">Essay Required</li>
+                    <li class="requirement-item">Minimum GPA 3.0</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 2 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">STEM Excellence Scholarship</div>
+            <span class="eligibility-badge">88% Eligible</span>
+            <span class="organization">Algerian Science Foundation</span>
+            <div class="amount">50,000 DA</div>
+            <div class="deadline">Deadline: Jan 15, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Computer Science Major</li>
+                    <li class="requirement-item">GPA 3.5 or higher</li>
+                    <li class="requirement-item">Research Experience</li>
+                    <li class="requirement-item">Letter of Recommendation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 3 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Engineering Merit Award</div>
+            <span class="eligibility-badge">85% Eligible</span>
+            <span class="organization">National Engineering Council</span>
+            <div class="amount">35,000 DA</div>
+            <div class="deadline">Deadline: Nov 30, 2025</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Engineering Major</li>
+                    <li class="requirement-item">2nd year or above</li>
+                    <li class="requirement-item">Project Portfolio</li>
+                    <li class="requirement-item">Technical Interview</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 4 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Rural Student Grant</div>
+            <span class="eligibility-badge">95% Eligible</span>
+            <span class="organization">Education for All Initiative</span>
+            <div class="amount">45,000 DA</div>
+            <div class="deadline">Deadline: Feb 28, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">From Rural Area</li>
+                    <li class="requirement-item">Financial Need</li>
+                    <li class="requirement-item">Full-time Student</li>
+                    <li class="requirement-item">Community Service</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 5 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Medical Studies Scholarship</div>
+            <span class="eligibility-badge">82% Eligible</span>
+            <span class="organization">Algerian Medical Association</span>
+            <div class="amount">60,000 DA</div>
+            <div class="deadline">Deadline: Mar 15, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Medical School Student</li>
+                    <li class="requirement-item">Minimum GPA 3.2</li>
+                    <li class="requirement-item">Clinical Experience</li>
+                    <li class="requirement-item">Personal Statement</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 6 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">AI & Data Science Grant</div>
+            <span class="eligibility-badge">90% Eligible</span>
+            <span class="organization">Tech Innovation Algeria</span>
+            <div class="amount">55,000 DA</div>
+            <div class="deadline">Deadline: Dec 15, 2025</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">AI/ML Specialization</li>
+                    <li class="requirement-item">Python Programming</li>
+                    <li class="requirement-item">Project Demonstration</li>
+                    <li class="requirement-item">GitHub Portfolio</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 7 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Entrepreneurship Fellowship</div>
+            <span class="eligibility-badge">78% Eligible</span>
+            <span class="organization">Startup Algeria</span>
+            <div class="amount">75,000 DA</div>
+            <div class="deadline">Deadline: Jan 31, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Business Plan</li>
+                    <li class="requirement-item">Team of 2-4</li>
+                    <li class="requirement-item">Market Research</li>
+                    <li class="requirement-item">Pitch Presentation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 8 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Language Studies Award</div>
+            <span class="eligibility-badge">87% Eligible</span>
+            <span class="organization">Cultural Exchange Program</span>
+            <div class="amount">30,000 DA</div>
+            <div class="deadline">Deadline: Oct 30, 2025</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Language Major</li>
+                    <li class="requirement-item">Bilingual Proficiency</li>
+                    <li class="requirement-item">Cultural Essay</li>
+                    <li class="requirement-item">Interview in Target Language</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 9 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Environmental Science Grant</div>
+            <span class="eligibility-badge">83% Eligible</span>
+            <span class="organization">Green Future Algeria</span>
+            <div class="amount">42,000 DA</div>
+            <div class="deadline">Deadline: Apr 10, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Environmental Studies</li>
+                    <li class="requirement-item">Research Proposal</li>
+                    <li class="requirement-item">Field Experience</li>
+                    <li class="requirement-item">Sustainability Focus</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 10 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Creative Arts Scholarship</div>
+            <span class="eligibility-badge">80% Eligible</span>
+            <span class="organization">Algerian Arts Council</span>
+            <div class="amount">25,000 DA</div>
+            <div class="deadline">Deadline: Mar 01, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Portfolio Submission</li>
+                    <li class="requirement-item">Art/Design Major</li>
+                    <li class="requirement-item">Creative Statement</li>
+                    <li class="requirement-item">Exhibition Experience</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 11 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">Cybersecurity Scholarship</div>
+            <span class="eligibility-badge">91% Eligible</span>
+            <span class="organization">National Security Institute</span>
+            <div class="amount">65,000 DA</div>
+            <div class="deadline">Deadline: Feb 15, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">Cybersecurity Focus</li>
+                    <li class="requirement-item">Technical Certification</li>
+                    <li class="requirement-item">CTF Experience</li>
+                    <li class="requirement-item">Security Clearance Eligible</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scholarship 12 -->
+        <div class="scholarship-card">
+            <div class="scholarship-title">First Generation Student Award</div>
+            <span class="eligibility-badge">96% Eligible</span>
+            <span class="organization">Higher Education Access</span>
+            <div class="amount">38,000 DA</div>
+            <div class="deadline">Deadline: Jan 20, 2026</div>
+            <div class="requirements-section">
+                <div class="requirements-title">Requirements:</div>
+                <ul class="requirements-list">
+                    <li class="requirement-item">First in Family to Attend University</li>
+                    <li class="requirement-item">Financial Need Documentation</li>
+                    <li class="requirement-item">Academic Promise</li>
+                    <li class="requirement-item">Mentor Reference</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional metadata for scraping -->
+    <div style="display: none;" id="metadata">
+        <div class="total-scholarships">12</div>
+        <div class="last-updated">2025-10-15</div>
+        <div class="currency">Algerian Dinar (DA)</div>
+    </div>
+
+    <script>
+        // Optional: Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.scholarship-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+                    setTimeout(() => {
+                        this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                    }, 300);
+                });
+            });
+            
+            // Log for scraping verification
+            console.log('Scholarship page loaded with', cards.length, 'listings');
+        });
+    </script>
+</body>
+</html>

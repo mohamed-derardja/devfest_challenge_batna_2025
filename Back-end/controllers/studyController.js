@@ -225,6 +225,100 @@ Modules to cover: ${modules.join(', ')}.
 };
 
 
+// ===============================
+// Resource Recommendation Endpoint
+// ===============================
+const resourcePrompt = `
+You are an AI Resource Recommender for students. 
+
+Input: A topic or subject provided by the user.  
+
+Output: A structured list of study resources including:
+1. Books (title + author + short description)
+2. YouTube videos (title + link + short description)
+3. Websites or articles (title + link + short description)
+4. Optional: Free courses or tools if relevant
+
+Rules:
+- Academic resources only
+- Include a variety of formats
+- Respond in markdown
+- Be concise and useful
+`;
+
+export const recommendResources = async (req, res) => {
+  try {
+    const { topic } = req.body;
+    if (!topic) return res.status(400).json({ success: false, message: 'Provide a topic to get recommendations' });
+
+    const finalPrompt = `${resourcePrompt}\n\nTopic: ${topic}`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: finalPrompt,
+      temperature: 0.5,
+      maxOutputTokens: 1200
+    });
+
+    res.json({
+      success: true,
+      topic,
+      recommendations: response.text,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (err) {
+    console.error('Resource Recommendation Error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to generate recommendations', error: err.message });
+  }
+};
+
+// ===============================
+// Exercise & Quiz Generator Endpoint
+// ===============================
+const exercisePrompt = `
+You are an AI Exercise and Quiz Generator for students.
+
+Input: A topic or module provided by the user.
+
+Output a structured response in markdown:
+1. **Examples with Solutions** – Show at least 2 worked examples.
+2. **Exercises** – At least 3 exercises for practice (with answers hidden or revealed separately).
+3. **Quiz** – 5 multiple-choice questions with 4 options each, indicate the correct answer.
+
+Rules:
+- Academic content only
+- Clear and concise explanations
+- Respond in markdown
+`;
+
+export const generateExercises = async (req, res) => {
+  try {
+    const { topic } = req.body;
+    if (!topic) return res.status(400).json({ success: false, message: 'Provide a topic or module' });
+
+    const finalPrompt = `${exercisePrompt}\n\nTopic: ${topic}`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: finalPrompt,
+      temperature: 0.7,
+      maxOutputTokens: 2000
+    });
+
+    res.json({
+      success: true,
+      topic,
+      exercises: response.text,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (err) {
+    console.error('Exercise Generator Error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to generate exercises', error: err.message });
+  }
+};
+
 
 // ===============================
 // Internship Scraping Endpoint
@@ -279,7 +373,46 @@ export const getInternships = async (req, res) => {
   }
 };
 
+const LOCAL_HTML_URL_2 = 'http://127.0.0.1:5500/landing-sc/index2.html';
 
+export const getScholarships = async (req, res) => {
+  try {
+    const { data } = await axios.get(LOCAL_HTML_URL_2);
+    const $ = cheerio.load(data);
+
+    const scholarships = [];
+
+    $('.scholarship-card').each((i, el) => {
+      const title = $(el).find('.scholarship-title').text().trim();
+      const eligibility = $(el).find('.eligibility-badge').text().trim();
+      const organization = $(el).find('.organization').text().trim();
+      const amount = $(el).find('.amount').text().trim();
+      const deadline = $(el).find('.deadline').text().replace('Deadline:', '').trim();
+
+      const requirements = [];
+      $(el).find('.requirements-list .requirement-item').each((j, req) => {
+        requirements.push($(req).text().trim());
+      });
+
+      if (title) {
+        scholarships.push({
+          title,
+          eligibility,
+          organization,
+          amount,
+          deadline,
+          requirements
+        });
+      }
+    });
+
+    res.json({ success: true, data: scholarships });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Failed to scrape scholarships', error: error.message });
+  }
+};
 
 // export const fetchInternships = async (req, res) => {
 //   try {
