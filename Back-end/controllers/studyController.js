@@ -1,17 +1,20 @@
 import fs from 'fs/promises';
 import path from 'path';
-import pdfParse from 'pdf-parse';
+import * as pdfParse from 'pdf-parse';
 import { GoogleGenAI } from '@google/genai';
 import Tesseract from 'tesseract.js';
 import sharp from 'sharp';
-// import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import axios from 'axios';
-// import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import puppeteer from 'puppeteer';
+import 'dotenv/config';
 
+
+
+// ===============================
 // Initialize Google GenAI client
-const ai = new GoogleGenAI({ apiKey: "AIzaSyC_wEMvvzIdVSzXijccWkoW5tbB_LDceiQ" });
+// ===============================
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // ===============================
 // OCR: Extract text from images
@@ -19,7 +22,6 @@ const ai = new GoogleGenAI({ apiKey: "AIzaSyC_wEMvvzIdVSzXijccWkoW5tbB_LDceiQ" }
 async function describeImage(filePath) {
   try {
     const processedPath = path.join(path.dirname(filePath), 'processed-' + path.basename(filePath));
-
     await sharp(filePath).grayscale().normalize().toFile(processedPath);
 
     const { data: { text } } = await Tesseract.recognize(processedPath, 'eng');
@@ -56,7 +58,7 @@ async function extractTextFromFile(filePath, mimeType) {
 }
 
 // ===============================
-// Study Assistant
+// Study Assistant Endpoint
 // ===============================
 const studyAssistantPrompt = `
 You are an AI Study Assistant. Provide:
@@ -143,7 +145,6 @@ export const summarizeContent = async (req, res) => {
     const { text, points = 3 } = req.body;
     const file = req.file;
     let content = text || '';
-;
 
     if (file) content = await extractTextFromFile(file.path, file.mimetype);
 
@@ -164,33 +165,26 @@ export const summarizeContent = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to summarize content', error: err.message });
   }
 };
- 
 
-// puppeteer.use(StealthPlugin());
-
-// controllers/internshipController.js
-import puppeteer from 'puppeteer';
-// import axios from 'axios';
-// import * as cheerio from 'cheerio';
-
+// ===============================
+// Internship Scraping Endpoint
+// ===============================
 export const fetchInternships = async (req, res) => {
   try {
     const results = [];
     const query = req.query.q || 'internship';
     const location = req.query.location || '';
 
-    // =========================
-    // 1. Scrape Indeed (static-ish)
-    // =========================
+    // -------------------------
+    // 1. Indeed
+    // -------------------------
     try {
       let url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
       if (location) url += `&l=${encodeURIComponent(location)}`;
 
-      const { data } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-      });
-
+      const { data } = await axios.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
       const $ = cheerio.load(data);
+
       $('.result').each((i, el) => {
         const title = $(el).find('.jobTitle').text().trim();
         const company = $(el).find('.companyName').text().trim();
@@ -203,13 +197,11 @@ export const fetchInternships = async (req, res) => {
       console.error('Indeed scraping failed:', err.message);
     }
 
-    // =========================
-    // 2. Scrape Emploitic (Algerian)
-    // =========================
+    // -------------------------
+    // 2. Emploitic
+    // -------------------------
     try {
-      const { data } = await axios.get('https://www.emploitic.com/emploi-recherche?q=stage', {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-      });
+      const { data } = await axios.get('https://www.emploitic.com/emploi-recherche?q=stage', { headers: { 'User-Agent': 'Mozilla/5.0' } });
       const $ = cheerio.load(data);
 
       $('.job-listing').each((i, el) => {
@@ -224,9 +216,9 @@ export const fetchInternships = async (req, res) => {
       console.error('Emploitic scraping failed:', err.message);
     }
 
-    // =========================
-    // 3. LinkedIn (dynamic, Puppeteer)
-    // =========================
+    // -------------------------
+    // 3. LinkedIn (dynamic Puppeteer)
+    // -------------------------
     try {
       const browser = await puppeteer.launch({ headless: true });
       const page = await browser.newPage();
@@ -235,17 +227,16 @@ export const fetchInternships = async (req, res) => {
       const linkedinUrl = `https://www.linkedin.com/jobs/search?keywords=${encodeURIComponent(query)}&location=${encodeURIComponent(location || 'Worldwide')}`;
       await page.goto(linkedinUrl, { waitUntil: 'networkidle2' });
 
-      // Auto-scroll to load jobs
       await autoScroll(page);
 
       const jobElements = await page.$$('[data-job-id]');
-      for (const jobEl of jobElements.slice(0, 20)) { // limit to first 20
+      for (const jobEl of jobElements.slice(0, 20)) {
         const title = await jobEl.$eval('.base-search-card__title', el => el.innerText.trim());
         const company = await jobEl.$eval('.base-search-card__subtitle', el => el.innerText.trim());
         const loc = await jobEl.$eval('.job-search-card__location', el => el.innerText.trim());
         const link = await jobEl.$eval('a.base-card__full-link', el => el.href);
 
-        results.push({ title, company, location:loc, link, source: 'LinkedIn' });
+        results.push({ title, company, location: loc, link, source: 'LinkedIn' });
       }
 
       await browser.close();
@@ -256,7 +247,7 @@ export const fetchInternships = async (req, res) => {
     res.json({
       success: true,
       count: results.length,
-      results: results.slice(0, 50), // limit to top 50 internships
+      results: results.slice(0, 50),
       timestamp: new Date().toISOString(),
     });
 
@@ -266,7 +257,9 @@ export const fetchInternships = async (req, res) => {
   }
 };
 
-// Helper function: auto-scroll Puppeteer page
+// ===============================
+// Helper: Auto-scroll Puppeteer page
+// ===============================
 async function autoScroll(page) {
   await page.evaluate(async () => {
     await new Promise((resolve) => {
@@ -276,7 +269,6 @@ async function autoScroll(page) {
         const scrollHeight = document.body.scrollHeight;
         window.scrollBy(0, distance);
         totalHeight += distance;
-
         if (totalHeight >= scrollHeight - window.innerHeight) {
           clearInterval(timer);
           resolve();

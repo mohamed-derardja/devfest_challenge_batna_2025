@@ -3,6 +3,7 @@ const router = express.Router();
 const upload = require('../middleware/upload'); // your multer config
 const studyController = require('../controllers/studyController');
 
+
 // Study assistant endpoint (with optional document upload)
 router.post(
   '/',

@@ -11,7 +11,7 @@ const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
-
+const studyRoutes = require('./routes/studyRoutes')
 // Initialize Express app
 const app = express();
 
@@ -46,6 +46,25 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/study', studyRoutes);
+
+
+//PLS JUST LET IT I KNOW IT'S NOT ITS PLACE
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({
+            success: false,
+            message: 'File upload error',
+            error: err.message
+        });
+    } else if (err) {
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        });
+    }
+    next();
+});
 
 // Error handler (should be last)
 app.use(errorHandler);
