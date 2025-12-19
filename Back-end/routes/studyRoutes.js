@@ -18,9 +18,16 @@ router.post(
   studyController.summarizeContent
 );
 
-router.get(
-    '/internships',
-    studyController.fetchInternships
-)
+// router.get(
+//     '/internships',
+//     studyController.fetchInternships
+// )
+
+
+router.get('/interships', studyController.getInternships);
+
+router.post('/plan', studyController.studyPlanner);
+
 
 module.exports = router;
+

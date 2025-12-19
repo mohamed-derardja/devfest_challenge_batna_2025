@@ -167,113 +167,225 @@ export const summarizeContent = async (req, res) => {
 };
 
 // ===============================
-// Internship Scraping Endpoint
+// Study Planner Endpoint
 // ===============================
-export const fetchInternships = async (req, res) => {
+const studyPlannerPrompt = `
+You are an AI Study Planner. Your task is to create a detailed and realistic study schedule.
+
+Input:
+- Total available study time (days, hours per day)
+- List of modules or topics
+
+Output a plan with:
+1. Daily schedule (hours per topic/module)
+2. Suggested breaks
+3. Priority topics first
+4. Tips for efficient study
+5. Optional mini quizzes or practice tasks
+
+Rules:
+- Be practical and achievable
+- Academic topics only
+- Respond in markdown
+`;
+
+export const studyPlanner = async (req, res) => {
   try {
-    const results = [];
-    const query = req.query.q || 'internship';
-    const location = req.query.location || '';
+    const { totalDays, hoursPerDay, modules } = req.body;
 
-    // -------------------------
-    // 1. Indeed
-    // -------------------------
-    try {
-      let url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
-      if (location) url += `&l=${encodeURIComponent(location)}`;
-
-      const { data } = await axios.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      const $ = cheerio.load(data);
-
-      $('.result').each((i, el) => {
-        const title = $(el).find('.jobTitle').text().trim();
-        const company = $(el).find('.companyName').text().trim();
-        const loc = $(el).find('.companyLocation').text().trim();
-        const link = 'https://www.indeed.com' + $(el).find('a').attr('href');
-
-        if (title) results.push({ title, company, location: loc, link, source: 'Indeed' });
-      });
-    } catch (err) {
-      console.error('Indeed scraping failed:', err.message);
+    if (!totalDays || !hoursPerDay || !modules || !Array.isArray(modules) || modules.length === 0) {
+      return res.status(400).json({ success: false, message: 'Provide totalDays, hoursPerDay, and modules array' });
     }
 
-    // -------------------------
-    // 2. Emploitic
-    // -------------------------
-    try {
-      const { data } = await axios.get('https://www.emploitic.com/emploi-recherche?q=stage', { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      const $ = cheerio.load(data);
+    const userInput = `
+Student has ${totalDays} days available.
+Can study ${hoursPerDay} hours per day.
+Modules to cover: ${modules.join(', ')}.
+`;
 
-      $('.job-listing').each((i, el) => {
-        const title = $(el).find('.title-job').text().trim();
-        const company = $(el).find('.company-name').text().trim();
-        const loc = $(el).find('.location-job').text().trim();
-        const link = 'https://www.emploitic.com' + $(el).find('a').attr('href');
+    const finalPrompt = `${studyPlannerPrompt}\n\n${userInput}`;
 
-        if (title) results.push({ title, company, location: loc, link, source: 'Emploitic' });
-      });
-    } catch (err) {
-      console.error('Emploitic scraping failed:', err.message);
-    }
-
-    // -------------------------
-    // 3. LinkedIn (dynamic Puppeteer)
-    // -------------------------
-    try {
-      const browser = await puppeteer.launch({ headless: true });
-      const page = await browser.newPage();
-      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-
-      const linkedinUrl = `https://www.linkedin.com/jobs/search?keywords=${encodeURIComponent(query)}&location=${encodeURIComponent(location || 'Worldwide')}`;
-      await page.goto(linkedinUrl, { waitUntil: 'networkidle2' });
-
-      await autoScroll(page);
-
-      const jobElements = await page.$$('[data-job-id]');
-      for (const jobEl of jobElements.slice(0, 20)) {
-        const title = await jobEl.$eval('.base-search-card__title', el => el.innerText.trim());
-        const company = await jobEl.$eval('.base-search-card__subtitle', el => el.innerText.trim());
-        const loc = await jobEl.$eval('.job-search-card__location', el => el.innerText.trim());
-        const link = await jobEl.$eval('a.base-card__full-link', el => el.href);
-
-        results.push({ title, company, location: loc, link, source: 'LinkedIn' });
-      }
-
-      await browser.close();
-    } catch (err) {
-      console.error('LinkedIn scraping failed:', err.message);
-    }
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: finalPrompt,
+      temperature: 0.5,
+      maxOutputTokens: 1500
+    });
 
     res.json({
       success: true,
-      count: results.length,
-      results: results.slice(0, 50),
-      timestamp: new Date().toISOString(),
+      plan: response.text,
+      timestamp: new Date().toISOString()
     });
 
   } catch (err) {
-    console.error('Global internships scraping error:', err.message);
-    res.status(500).json({ success: false, message: 'Failed to fetch internships', error: err.message });
+    console.error('Study Planner Error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to generate study plan', error: err.message });
   }
 };
 
+
+
 // ===============================
-// Helper: Auto-scroll Puppeteer page
+// Internship Scraping Endpoint
 // ===============================
-async function autoScroll(page) {
-  await page.evaluate(async () => {
-    await new Promise((resolve) => {
-      let totalHeight = 0;
-      const distance = 100;
-      const timer = setInterval(() => {
-        const scrollHeight = document.body.scrollHeight;
-        window.scrollBy(0, distance);
-        totalHeight += distance;
-        if (totalHeight >= scrollHeight - window.innerHeight) {
-          clearInterval(timer);
-          resolve();
-        }
-      }, 200);
+
+const LOCAL_HTML_URL = 'http://127.0.0.1:5500/landing-sc/index.html';
+
+export const getInternships = async (req, res) => {
+  try {
+    const { data } = await axios.get(LOCAL_HTML_URL);
+    const $ = cheerio.load(data);
+
+    const internships = [];
+
+    $('li').each((i, el) => {
+      const title = $(el).find('.internship-title').text().trim();
+      const link = $(el).find('.internship-title').attr('href');
+      const match = $(el).find('.match-badge').text().trim();
+      const company = $(el).find('.company').text().trim();
+
+      const paid = $(el).find('.details-grid .tag.paid').text().trim();
+      const location = $(el).find('.details-grid .tag.location').text().trim();
+      const duration = $(el).find('.details-grid .tag.duration').text().trim();
+      const salary = $(el).find('.details-grid .tag.salary').text().trim();
+      const deadline = $(el).find('.details-grid .tag.deadline').text().replace('Due:','').trim();
+
+      const skills = [];
+      $(el).find('.required-skills .skill-tag').each((j, skill) => {
+        skills.push($(skill).text().trim());
+      });
+
+      if(title && link) {
+        internships.push({
+          title,
+          link,
+          match,
+          company,
+          paid,
+          location,
+          duration,
+          salary,
+          deadline,
+          skills
+        });
+      }
     });
-  });
-}
+
+    res.json({ success: true, data: internships });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Failed to scrape internships', error: error.message });
+  }
+};
+
+
+
+// export const fetchInternships = async (req, res) => {
+//   try {
+//     const results = [];
+//     const query = req.query.q || 'internship';
+//     const location = req.query.location || '';
+
+//     // -------------------------
+//     // 1. Indeed
+//     // -------------------------
+//     try {
+//       let url = `https://www.indeed.com/jobs?q=${encodeURIComponent(query)}`;
+//       if (location) url += `&l=${encodeURIComponent(location)}`;
+
+//       const { data } = await axios.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+//       const $ = cheerio.load(data);
+
+//       $('.result').each((i, el) => {
+//         const title = $(el).find('.jobTitle').text().trim();
+//         const company = $(el).find('.companyName').text().trim();
+//         const loc = $(el).find('.companyLocation').text().trim();
+//         const link = 'https://www.indeed.com' + $(el).find('a').attr('href');
+
+//         if (title) results.push({ title, company, location: loc, link, source: 'Indeed' });
+//       });
+//     } catch (err) {
+//       console.error('Indeed scraping failed:', err.message);
+//     }
+
+//     // -------------------------
+//     // 2. Emploitic
+//     // -------------------------
+//     try {
+//       const { data } = await axios.get('https://www.emploitic.com/emploi-recherche?q=stage', { headers: { 'User-Agent': 'Mozilla/5.0' } });
+//       const $ = cheerio.load(data);
+
+//       $('.job-listing').each((i, el) => {
+//         const title = $(el).find('.title-job').text().trim();
+//         const company = $(el).find('.company-name').text().trim();
+//         const loc = $(el).find('.location-job').text().trim();
+//         const link = 'https://www.emploitic.com' + $(el).find('a').attr('href');
+
+//         if (title) results.push({ title, company, location: loc, link, source: 'Emploitic' });
+//       });
+//     } catch (err) {
+//       console.error('Emploitic scraping failed:', err.message);
+//     }
+
+//     // -------------------------
+//     // 3. LinkedIn (dynamic Puppeteer)
+//     // -------------------------
+//     try {
+//       const browser = await puppeteer.launch({ headless: true });
+//       const page = await browser.newPage();
+//       await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+//       const linkedinUrl = `https://www.linkedin.com/jobs/search?keywords=${encodeURIComponent(query)}&location=${encodeURIComponent(location || 'Worldwide')}`;
+//       await page.goto(linkedinUrl, { waitUntil: 'networkidle2' });
+
+//       await autoScroll(page);
+
+//       const jobElements = await page.$$('[data-job-id]');
+//       for (const jobEl of jobElements.slice(0, 20)) {
+//         const title = await jobEl.$eval('.base-search-card__title', el => el.innerText.trim());
+//         const company = await jobEl.$eval('.base-search-card__subtitle', el => el.innerText.trim());
+//         const loc = await jobEl.$eval('.job-search-card__location', el => el.innerText.trim());
+//         const link = await jobEl.$eval('a.base-card__full-link', el => el.href);
+
+//         results.push({ title, company, location: loc, link, source: 'LinkedIn' });
+//       }
+
+//       await browser.close();
+//     } catch (err) {
+//       console.error('LinkedIn scraping failed:', err.message);
+//     }
+
+//     res.json({
+//       success: true,
+//       count: results.length,
+//       results: results.slice(0, 50),
+//       timestamp: new Date().toISOString(),
+//     });
+
+//   } catch (err) {
+//     console.error('Global internships scraping error:', err.message);
+//     res.status(500).json({ success: false, message: 'Failed to fetch internships', error: err.message });
+//   }
+// };
+
+// // ===============================
+// // Helper: Auto-scroll Puppeteer page
+// // ===============================
+// async function autoScroll(page) {
+//   await page.evaluate(async () => {
+//     await new Promise((resolve) => {
+//       let totalHeight = 0;
+//       const distance = 100;
+//       const timer = setInterval(() => {
+//         const scrollHeight = document.body.scrollHeight;
+//         window.scrollBy(0, distance);
+//         totalHeight += distance;
+//         if (totalHeight >= scrollHeight - window.innerHeight) {
+//           clearInterval(timer);
+//           resolve();
+//         }
+//       }, 200);
+//     });
+//   });
+// }

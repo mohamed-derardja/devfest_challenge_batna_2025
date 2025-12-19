@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Listings</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #0066cc;
+        }
+        .internship-title {
+            display: block;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+        .match-badge {
+            display: inline-block;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        .company {
+            display: block;
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .paid {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .location {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        .duration {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .salary {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+        .deadline {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .required-skills {
+            margin-top: 15px;
+        }
+        .required-skills h3 {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .skill-tag {
+            background-color: #e0e0e0;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Internship Listings</h1>
+    <ul>
+        <li>
+            <a href="https://example.com/internship1" class="internship-title">Software Development Intern</a>
+            <span class="match-badge">95% Match</span>
+            <span class="company">Tech Solutions DZ</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Algiers</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">3 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">25,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Dec 31, 2025</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Git</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship2" class="internship-title">Data Science Intern</a>
+            <span class="match-badge">88% Match</span>
+            <span class="company">DataCorp Algeria</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Oran</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">6 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">30,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Jan 15, 2026</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">Machine Learning</span>
+                    <span class="skill-tag">Pandas</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship3" class="internship-title">Frontend Developer Intern</a>
+            <span class="match-badge">92% Match</span>
+            <span class="company">WebCrafters DZ</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Constantine</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">4 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">22,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Nov 30, 2025</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">CSS</span>
+                    <span class="skill-tag">TypeScript</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship4" class="internship-title">Mobile App Developer</a>
+            <span class="match-badge">85% Match</span>
+            <span class="company">InnovateTech Algeria</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Algiers</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">5 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">28,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Feb 28, 2026</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">Flutter</span>
+                    <span class="skill-tag">Dart</span>
+                    <span class="skill-tag">Firebase</span>
+                    <span class="skill-tag">REST API</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship5" class="internship-title">Backend Engineering Intern</a>
+            <span class="match-badge">90% Match</span>
+            <span class="company">Cloud Systems DZ</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Oran</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">3 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">26,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Dec 15, 2025</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">Express</span>
+                    <span class="skill-tag">Docker</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship6" class="internship-title">UI/UX Design Intern</a>
+            <span class="match-badge">82% Match</span>
+            <span class="company">Creative Designs DZ</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Constantine</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">4 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">20,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Jan 10, 2026</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">Adobe XD</span>
+                    <span class="skill-tag">Wireframing</span>
+                    <span class="skill-tag">Prototyping</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship7" class="internship-title">Cybersecurity Intern</a>
+            <span class="match-badge">87% Match</span>
+            <span class="company">SecureNet Algeria</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Algiers</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">6 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">32,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Mar 15, 2026</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">Network Security</span>
+                    <span class="skill-tag">Ethical Hacking</span>
+                    <span class="skill-tag">Linux</span>
+                    <span class="skill-tag">Cryptography</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship8" class="internship-title">DevOps Intern</a>
+            <span class="match-badge">89% Match</span>
+            <span class="company">Digital Ops Algeria</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Oran</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">5 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">30,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Feb 10, 2026</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">AWS</span>
+                    <span class="skill-tag">Kubernetes</span>
+                    <span class="skill-tag">CI/CD</span>
+                    <span class="skill-tag">Terraform</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship9" class="internship-title">AI Research Intern</a>
+            <span class="match-badge">94% Match</span>
+            <span class="company">AI Innovations DZ</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Constantine</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">6 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">35,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Jan 31, 2026</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">TensorFlow</span>
+                    <span class="skill-tag">PyTorch</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Research</span>
+                </div>
+            </div>
+        </li>
+        
+        <li>
+            <a href="https://example.com/internship10" class="internship-title">Full Stack Developer Intern</a>
+            <span class="match-badge">91% Match</span>
+            <span class="company">Tech Fusion Algeria</span>
+            <div class="details-grid">
+                <span class="detail-item">
+                    <span class="tag paid">Paid</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag location">Algiers</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag duration">4 months</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag salary">27,000 DA/month</span>
+                </span>
+                <span class="detail-item">
+                    <span class="tag deadline">Due: Dec 20, 2025</span>
+                </span>
+            </div>
+            <div class="required-skills">
+                <h3>Required Skills:</h3>
+                <div class="skills-list">
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">GraphQL</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>
