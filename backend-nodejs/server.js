@@ -8,24 +8,11 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:3000'
-  ],
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static files from uploads directory
-app.use('/uploads', express.static('uploads'));
-
-// Request logging
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
-  next();
-});
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -40,36 +27,24 @@ const authRoutes = require('./routes/auth');
 const lostFoundRoutes = require('./routes/lostFound');
 const examPrepRoutes = require('./routes/examPrep');
 const notificationRoutes = require('./routes/notifications');
-const rewardsRoutes = require('./routes/rewards');
-const newsRoutes = require('./routes/news');
-const documentsRoutes = require('./routes/documents');
-const profileRoutes = require('./routes/profile');
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/lost-found', lostFoundRoutes);
 app.use('/api/exam-prep', examPrepRoutes);
 app.use('/api/notifications', notificationRoutes);
-app.use('/api/rewards', rewardsRoutes);
-app.use('/api/news', newsRoutes);
-app.use('/api/documents', documentsRoutes);
-app.use('/api/profile', profileRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
   res.json({
     status: 'online',
     message: 'Student Platform API with Gemini AI',
-    version: '2.0.0',
+    version: '1.0.0',
     endpoints: {
       auth: '/api/auth',
       lostFound: '/api/lost-found',
       examPrep: '/api/exam-prep',
-      notifications: '/api/notifications',
-      rewards: '/api/rewards',
-      news: '/api/news',
-      documents: '/api/documents',
-      profile: '/api/profile'
+      notifications: '/api/notifications'
     }
   });
 });

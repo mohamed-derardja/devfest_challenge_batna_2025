@@ -1,6 +1,6 @@
-# Node.js Backend with MongoDB & Gemini AI - Complete Platform
+# Node.js Backend with MongoDB & Gemini AI
 
-Complete backend server for the Student Success Platform with MongoDB database, Google Gemini AI integration, and comprehensive features.
+Complete backend server for the Student Platform with MongoDB database and Google Gemini AI integration.
 
 ## 🚀 Quick Start
 
@@ -17,12 +17,7 @@ The `.env` file is already configured with:
 - Port 5000
 - JWT secret
 
-### 3. Seed Sample Data (Optional)
-```bash
-npm run seed
-```
-
-### 4. Start the Server
+### 3. Start the Server
 ```bash
 # Development mode with auto-reload
 npm run dev
@@ -39,15 +34,10 @@ Server will run at: **http://localhost:5000**
 - **Quiz Generation** - Gemini AI generates custom quizzes
 - **Document Summarization** - AI-powered text summarization
 - **Item Matching** - Smart matching for lost & found items
-- **News Summarization** - Automatic summary generation for news
-- **Document Search** - AI-powered opportunity recommendations
 
 ### 💾 Database (MongoDB)
 - User authentication & profiles
 - Lost & found item storage
-- Tasks & rewards management
-- News updates tracking
-- Documents & opportunities database
 - Full CRUD operations
 - Mongoose ODM for data modeling
 
@@ -55,73 +45,31 @@ Server will run at: **http://localhost:5000**
 - JWT-based authentication
 - Bcrypt password hashing
 - Protected routes
-- Token verification
-
-### 🏆 Rewards System
-- Task completion tracking
-- Points management
-- Reward redemption
-- Leaderboard
-- User statistics
 
 ## 📡 API Endpoints
 
-### Authentication (`/api/auth`)
-- `POST /register` - Register new user
-- `POST /login` - User login
-- `GET /verify` - Verify JWT token
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `GET /api/auth/verify` - Verify JWT token
 
-### Lost & Found (`/api/lost-found`)
-- `GET /lost` - Get all lost items
-- `POST /lost` - Create lost item
-- `GET /found` - Get all found items
-- `POST /found` - Create found item
-- `GET /matches` - Get AI matches
-- `GET /heatmap` - Get heatmap data
+### Lost & Found
+- `GET /api/lost-found/lost` - Get all lost items
+- `POST /api/lost-found/lost` - Create lost item
+- `GET /api/lost-found/found` - Get all found items
+- `POST /api/lost-found/found` - Create found item
+- `GET /api/lost-found/matches` - Get AI matches
+- `GET /api/lost-found/heatmap` - Get heatmap data
 
-### Exam Prep (`/api/exam-prep`)
-- `POST /quiz/generate` - Generate quiz with Gemini AI
-- `POST /summarize` - Summarize text with Gemini AI
-- `GET /resources` - Get learning resources
+### Exam Prep (AI-Powered)
+- `POST /api/exam-prep/quiz/generate` - Generate quiz with Gemini AI
+- `POST /api/exam-prep/summarize` - Summarize text with Gemini AI
+- `GET /api/exam-prep/resources` - Get learning resources
 
-### Notifications (`/api/notifications`)
-- `GET /` - Get user notifications
-- `GET /unread-count` - Get unread count
-- `PUT /:id/read` - Mark as read
-
-### Rewards & Tasks (`/api/rewards`)
-- `GET /tasks` - Get all tasks
-- `GET /tasks/completed` - Get completed tasks
-- `POST /tasks/:id/complete` - Complete a task
-- `GET /rewards` - Get all rewards
-- `POST /rewards/:id/redeem` - Redeem a reward
-- `GET /rewards/redeemed` - Get redeemed rewards
-- `GET /leaderboard` - Get points leaderboard
-- `GET /stats` - Get user reward stats
-
-### News (`/api/news`)
-- `GET /` - Get all news updates
-- `GET /:id` - Get single news update
-- `POST /` - Create news update (auto AI summary)
-- `GET /critical/latest` - Get critical updates
-
-### Documents & Opportunities (`/api/documents`)
-- `GET /` - Get all documents/opportunities
-- `GET /:id` - Get single document
-- `POST /` - Create document
-- `POST /search/ai` - AI-powered search
-- `GET /type/scholarships` - Get scholarships
-- `GET /type/internships` - Get internships
-- `GET /type/grants` - Get grants
-- `POST /:id/apply` - Track application
-
-### Profile (`/api/profile`)
-- `GET /` - Get user profile
-- `PUT /` - Update profile
-- `GET /stats` - Get user statistics
-- `GET /activity` - Get activity history
-- `PUT /password` - Change password
-- `GET /achievements` - Get user achievements
+### Notifications
+- `GET /api/notifications` - Get user notifications
+- `GET /api/notifications/unread-count` - Get unread count
+- `PUT /api/notifications/:id/read` - Mark as read
 
 ## 🔧 Configuration
 
