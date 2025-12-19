@@ -53,6 +53,8 @@ export default function ExamPrepPage() {
   const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   const [quizError, setQuizError] = useState('');
+  const [userAnswers, setUserAnswers] = useState<{[key: number]: string}>({});
+  const [showResults, setShowResults] = useState(false);
 
   // PDF Summarizer States
   const [summaryInputMethod, setSummaryInputMethod] = useState<'text' | 'upload'>('text');
@@ -148,46 +150,154 @@ export default function ExamPrepPage() {
     if (cleaned.length < 40) return null;
 
     const sentences = parseSentences(cleaned);
-    const keyPoints = sentences.slice(0, 5).map((s) => (s.length > 160 ? `${s.slice(0, 157)}…` : s));
-    const overview = sentences.slice(0, 2).join(' ');
+    
+    // Extract key sentences based on importance indicators
+    const keyPoints = sentences
+      .slice(0, Math.min(8, sentences.length)) // Get up to 8 sentences
+      .filter(s => s.length > 20) // Filter out very short sentences
+      .map(s => s.length > 200 ? `${s.slice(0, 197)}...` : s);
+    
+    const overview = sentences.slice(0, 3).join(' ');
+    const finalOverview = overview.length > 400 ? overview.slice(0, 397) + '...' : overview;
 
     return {
       title: 'Neural Summary (Demo)',
-      overview: overview || 'Summary generated from your input.',
-      keyPoints: keyPoints.length ? keyPoints : [cleaned.slice(0, 180) + (cleaned.length > 180 ? '…' : '')],
+      overview: finalOverview || 'Summary generated from your input.',
+      keyPoints: keyPoints.length > 0 ? keyPoints : [cleaned.slice(0, 200) + (cleaned.length > 200 ? '...' : '')],
       actionItems: [
-        'Turn the key points into 10 flashcards',
-        'Write 5 practice questions per section',
-        'Schedule a 25-minute review tomorrow'
+        'Review and highlight the most important concepts',
+        'Create flashcards for key terms and definitions',
+        'Write practice questions to test your understanding',
+        'Schedule a follow-up review session within 24 hours'
       ]
     };
   };
 
+  const generateLocalQuiz = (content: string, difficulty: string) => {
+    const sentences = parseSentences(content);
+    const words = content.split(/\s+/);
+    
+    // Extract important terms (capitalized words, longer words)
+    const importantTerms = words
+      .filter(w => w.length > 4 && /^[A-Z]/.test(w))
+      .filter((v, i, a) => a.indexOf(v) === i)
+      .slice(0, 10);
+
+    const questions = [];
+    
+    // Generate questions based on sentences
+    for (let i = 0; i < Math.min(5, sentences.length); i++) {
+      const sentence = sentences[i];
+      if (sentence.length < 30) continue;
+      
+      // Create a fill-in-the-blank or comprehension question
+      const sentenceWords = sentence.split(' ');
+      const keyWordIndex = Math.floor(sentenceWords.length / 2);
+      const keyWord = sentenceWords[keyWordIndex];
+      
+      // Generate distractors
+      const options = [keyWord];
+      const otherWords = importantTerms.filter(t => t !== keyWord);
+      
+      while (options.length < 4 && otherWords.length > 0) {
+        const randomIndex = Math.floor(Math.random() * otherWords.length);
+        options.push(otherWords.splice(randomIndex, 1)[0]);
+      }
+      
+      // If we don't have enough terms, add generic options
+      const genericOptions = ['None of the above', 'All of the above', 'Not mentioned', 'Cannot be determined'];
+      while (options.length < 4) {
+        options.push(genericOptions[options.length - 1]);
+      }
+      
+      // Shuffle options
+      const shuffled = options.sort(() => Math.random() - 0.5);
+      const correctAnswer = String.fromCharCode(65 + shuffled.indexOf(keyWord));
+      
+      questions.push({
+        question: `Based on the content: "${sentence.slice(0, 100)}...", which term is most relevant?`,
+        options: shuffled,
+        correctAnswer: correctAnswer
+      });
+    }
+    
+    // If we couldn't generate enough questions, add comprehension questions
+    while (questions.length < 5) {
+      questions.push({
+        question: `What is the main topic discussed in this content?`,
+        options: [
+          quizSubject || 'The provided topic',
+          'An unrelated subject',
+          'General knowledge',
+          'None of the above'
+        ],
+        correctAnswer: 'A'
+      });
+    }
+    
+    return questions.slice(0, 5);
+  };
+
   // API Functions
   const handleGenerateQuiz = async () => {
-    if (!quizSubject && !textContent) {
-      setQuizError('Please enter a subject or topic');
+    if (!textContent) {
+      setQuizError('Please enter some content to generate a quiz from');
+      return;
+    }
+
+    if (textContent.length < 100) {
+      setQuizError('Please enter at least 100 characters of content for better quiz generation');
       return;
     }
 
     setIsGeneratingQuiz(true);
     setQuizError('');
+    setQuizQuestions([]); // Clear previous questions
     
     try {
       const response = await examPrepAPI.generateQuiz({
         subject: quizSubject || 'General',
-        topic: textContent,
+        content: textContent,
         difficulty: quizDifficulty,
-        count: 5
+        numQuestions: 5
       });
       
-      setQuizQuestions(response.questions || []);
+      console.log('AI Quiz Response:', response);
+      
+      if (response.questions && response.questions.length > 0) {
+        setQuizQuestions(response.questions);
+        setUserAnswers({});
+        setShowResults(false);
+      } else {
+        setQuizError('AI returned no questions. Please try again with different content.');
+      }
     } catch (err: any) {
-      setQuizError(err.message || 'Failed to generate quiz. Please try again.');
       console.error('Quiz generation error:', err);
+      setQuizError(err.message || 'Failed to generate quiz using AI. Please check your connection and try again.');
     } finally {
       setIsGeneratingQuiz(false);
     }
+  };
+
+  const handleAnswerSelect = (questionIndex: number, answer: string) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [questionIndex]: answer
+    }));
+  };
+
+  const handleSubmitQuiz = () => {
+    setShowResults(true);
+  };
+
+  const calculateScore = () => {
+    let correct = 0;
+    quizQuestions.forEach((q, i) => {
+      if (userAnswers[i] === q.correctAnswer) {
+        correct++;
+      }
+    });
+    return correct;
   };
 
   const handleSummarizeText = async () => {
@@ -196,33 +306,34 @@ export default function ExamPrepPage() {
       return;
     }
 
+    if (summaryText.length < 50) {
+      setSummaryError('Please enter at least 50 characters for better AI analysis');
+      return;
+    }
+
     setIsSummarizing(true);
     setSummaryError('');
+    setSummaryResult(null); // Clear previous summary
     
     try {
       const response = await examPrepAPI.summarizeText({ text: summaryText });
       
+      console.log('AI Summary Response:', response);
+      
       if (response.summary) {
         setSummaryResult({
-          title: response.summary.title || 'AI Summary',
+          title: response.summary.title || 'AI-Generated Summary',
           overview: response.summary.overview || '',
           keyPoints: response.summary.keyPoints || [],
-          actionItems: response.summary.actionItems || [
-            'Review key points and create flashcards',
-            'Practice with sample questions',
-            'Schedule follow-up study session'
-          ]
+          actionItems: response.summary.actionItems || []
         });
+        setSummaryError('');
+      } else {
+        setSummaryError('AI returned no summary. Please try again with different content.');
       }
     } catch (err: any) {
-      setSummaryError(err.message || 'Failed to generate summary. Please try again.');
       console.error('Summarization error:', err);
-      
-      // Fallback to local summary
-      const localSummary = generateQuickSummary(summaryText);
-      if (localSummary) {
-        setSummaryResult(localSummary);
-      }
+      setSummaryError(err.message || 'Failed to generate summary using AI. Please check your connection and try again.');
     } finally {
       setIsSummarizing(false);
     }
@@ -778,22 +889,101 @@ export default function ExamPrepPage() {
 
                   {quizQuestions.length > 0 && (
                     <div className="academic-card p-8 !bg-slate-50 border border-slate-100 space-y-6">
-                      <h3 className="text-xl font-serif font-bold text-slate-900 mb-4">Generated Quiz</h3>
-                      {quizQuestions.map((q, i) => (
-                        <div key={i} className="p-6 bg-white rounded-2xl border border-slate-200">
-                          <p className="font-bold text-slate-900 mb-4">{i + 1}. {q.question}</p>
-                          <div className="space-y-2">
-                            {q.options?.map((opt: string, j: number) => (
-                              <div key={j} className="p-3 rounded-xl bg-slate-50 text-sm">
-                                {String.fromCharCode(65 + j)}. {opt}
-                              </div>
-                            ))}
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xl font-serif font-bold text-slate-900">Generated Quiz</h3>
+                        {showResults && (
+                          <div className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold">
+                            Score: {calculateScore()} / {quizQuestions.length}
                           </div>
-                          {q.correctAnswer && (
-                            <p className="mt-3 text-sm text-emerald-600 font-medium">Correct: {q.correctAnswer}</p>
-                          )}
+                        )}
+                      </div>
+                      {quizQuestions.map((q, i) => {
+                        const userAnswer = userAnswers[i];
+                        const isCorrect = userAnswer === q.correctAnswer;
+                        
+                        return (
+                          <div key={i} className="p-6 bg-white rounded-2xl border border-slate-200">
+                            <p className="font-bold text-slate-900 mb-4">{i + 1}. {q.question}</p>
+                            <div className="space-y-2">
+                              {q.options?.map((opt: string, j: number) => {
+                                const optionLetter = String.fromCharCode(65 + j);
+                                const isSelected = userAnswer === optionLetter;
+                                const isCorrectAnswer = q.correctAnswer === optionLetter;
+                                
+                                let bgColor = 'bg-slate-50 hover:bg-slate-100';
+                                let borderColor = 'border-transparent';
+                                let textColor = 'text-slate-700';
+                                
+                                if (showResults) {
+                                  if (isCorrectAnswer) {
+                                    bgColor = 'bg-emerald-50';
+                                    borderColor = 'border-emerald-500';
+                                    textColor = 'text-emerald-900';
+                                  } else if (isSelected && !isCorrect) {
+                                    bgColor = 'bg-rose-50';
+                                    borderColor = 'border-rose-500';
+                                    textColor = 'text-rose-900';
+                                  }
+                                } else if (isSelected) {
+                                  bgColor = 'bg-indigo-50';
+                                  borderColor = 'border-indigo-500';
+                                  textColor = 'text-indigo-900';
+                                }
+                                
+                                return (
+                                  <button
+                                    key={j}
+                                    onClick={() => !showResults && handleAnswerSelect(i, optionLetter)}
+                                    disabled={showResults}
+                                    className={`w-full p-3 rounded-xl text-sm text-left transition-all border-2 ${bgColor} ${borderColor} ${textColor} ${!showResults ? 'cursor-pointer' : 'cursor-default'}`}
+                                  >
+                                    <span className="font-bold">{optionLetter}.</span> {opt}
+                                    {showResults && isCorrectAnswer && (
+                                      <CheckCircle className="w-4 h-4 inline-block ml-2 text-emerald-600" />
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      
+                      {!showResults && (
+                        <button
+                          onClick={handleSubmitQuiz}
+                          disabled={Object.keys(userAnswers).length !== quizQuestions.length}
+                          className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Submit Quiz
+                        </button>
+                      )}
+                      
+                      {showResults && (
+                        <div className="p-6 bg-white rounded-2xl border-2 border-indigo-200">
+                          <div className="text-center">
+                            <Trophy className="w-12 h-12 text-amber-500 mx-auto mb-3" />
+                            <h4 className="text-2xl font-bold text-slate-900 mb-2">
+                              {calculateScore() === quizQuestions.length ? 'Perfect Score!' : 
+                               calculateScore() >= quizQuestions.length * 0.7 ? 'Great Job!' : 'Keep Practicing!'}
+                            </h4>
+                            <p className="text-slate-600 font-medium">
+                              You got {calculateScore()} out of {quizQuestions.length} questions correct
+                              ({Math.round((calculateScore() / quizQuestions.length) * 100)}%)
+                            </p>
+                            <button
+                              onClick={() => {
+                                setUserAnswers({});
+                                setShowResults(false);
+                                setQuizQuestions([]);
+                              }}
+                              className="mt-4 px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all"
+                            >
+                              Generate New Quiz
+                            </button>
+                          </div>
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
                 </div>
@@ -893,16 +1083,16 @@ export default function ExamPrepPage() {
 
                       <p className="text-slate-600 font-medium leading-relaxed mb-6">{summaryResult.overview}</p>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-6">
                         <div className="p-6 rounded-3xl bg-white border border-slate-200">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Key Points</p>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Key Points ({summaryResult.keyPoints.length})</p>
                           <div className="space-y-3">
                             {summaryResult.keyPoints.map((p, i) => (
                               <div key={i} className="flex items-start gap-3">
-                                <div className="w-6 h-6 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+                                <div className="w-6 h-6 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 mt-0.5">
                                   <CheckCircle className="w-4 h-4 text-emerald-600" />
                                 </div>
-                                <p className="text-sm font-medium text-slate-700 leading-relaxed">{p}</p>
+                                <p className="text-sm font-medium text-slate-700 leading-relaxed flex-1">{p}</p>
                               </div>
                             ))}
                           </div>
@@ -913,10 +1103,10 @@ export default function ExamPrepPage() {
                           <div className="space-y-3">
                             {summaryResult.actionItems.map((p, i) => (
                               <div key={i} className="flex items-start gap-3">
-                                <div className="w-6 h-6 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
+                                <div className="w-6 h-6 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5">
                                   <ArrowRight className="w-4 h-4 text-indigo-600" />
                                 </div>
-                                <p className="text-sm font-medium text-slate-700 leading-relaxed">{p}</p>
+                                <p className="text-sm font-medium text-slate-700 leading-relaxed flex-1">{p}</p>
                               </div>
                             ))}
                           </div>

@@ -7,6 +7,13 @@ const User = require('../models/User');
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name, role } = req.body;
+    
+    console.log('Register request:', { email, name, role, hasPassword: !!password });
+
+    // Validate required fields
+    if (!email || !password || !name) {
+      return res.status(400).json({ message: 'Email, password, and name are required' });
+    }
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -31,6 +38,8 @@ router.post('/register', async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    console.log('User registered successfully:', email);
+
     res.status(201).json({
       token,
       user: {
@@ -41,6 +50,14 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Register error:', error);
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ message: messages.join(', ') });
+    }
+    
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
@@ -49,16 +66,25 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    console.log('Login request:', { email, hasPassword: !!password });
+
+    // Validate required fields
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
 
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Check password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
+      console.log('Password mismatch for:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
@@ -68,6 +94,8 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
+
+    console.log('User logged in successfully:', email);
 
     res.json({
       token,
@@ -79,6 +107,7 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
