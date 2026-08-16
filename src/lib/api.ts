@@ -31,8 +31,10 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   if (!response.ok) {
     if (response.status === 401) {
       // Clear invalid token
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('token');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('token');
+      }
       throw new Error('Session expired. Please log in again');
     }
     const error = await response.json().catch(() => ({ message: 'Request failed' }));
@@ -134,8 +136,10 @@ const authFetchFormData = async (url: string, formData: FormData) => {
 
   if (!response.ok) {
     if (response.status === 401) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('token');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('token');
+      }
       throw new Error('Session expired. Please log in again');
     }
     const error = await response.json().catch(() => ({ message: 'Request failed' }));
