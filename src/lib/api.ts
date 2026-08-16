@@ -46,9 +46,12 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
 export const examPrepAPI = {
   async generateQuiz(data: {
     subject?: string;
+    topic?: string;
+    count?: number;
     difficulty?: string;
     numQuestions?: number;
     content?: string;
+    [key: string]: any;
   }) {
     return authFetch(`${API_URL}/exam-prep/quiz/generate`, {
       method: 'POST',

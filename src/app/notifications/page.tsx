@@ -246,7 +246,7 @@ export default function NotificationsPage() {
                         </button>
                         {!n.read && (
                           <button 
-                            onClick={() => setNotifications(notifications.map(notif => notnotif.id === n.id ? {...notif, read: true} : notif))}
+                            onClick={() => setNotifications(notifications.map(notif => notif.id === n.id ? {...notif, read: true} : notif))}
                             className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600"
                           >
                             Mark Read
